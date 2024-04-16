@@ -41,7 +41,20 @@ public class Route {
     )
     protected List<TourGuideUser> tourGuideList;
 
+    public Route(String name, float price, float totalKm, int maxNumberUsers, List<Stop> stops){
+        this.name = name;
+        this.price = price;
+        this.totalKm = totalKm;
+        this.maxNumberUsers = maxNumberUsers;
+        this.stops = stops;
+        this.driverList = new ArrayList<>();
+        this.tourGuideList = new ArrayList<>();
 
+    }
+
+    public Route() {
+
+    }
 
     public Long getId() {
         return id;

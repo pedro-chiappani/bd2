@@ -13,7 +13,7 @@ import unlp.info.bd2.utils.ToursException;
 public class ToursServiceImpl implements ToursService {
 
     @Autowired
-    ToursRepository toursRepository;
+    private ToursRepository toursRepository;
 
     public ToursServiceImpl( ToursRepository toursRepository){
         this.toursRepository = toursRepository;
@@ -21,22 +21,20 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate, String phoneNumber) throws ToursException {
-        User usu = new User();
-        return ToursRepository.createUser();
+
+        return this.toursRepository.createUser(username, password, fullName, email, birthdate, phoneNumber);
     }
 
     @Override
     public DriverUser createDriverUser(String username, String password, String fullName, String email, Date birthdate,
             String phoneNumber, String expedient) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createDriverUser'");
+        return this.toursRepository.createDriverUser(username, password, fullName, email, birthdate, phoneNumber, expedient);
     }
 
     @Override
     public TourGuideUser createTourGuideUser(String username, String password, String fullName, String email,
             Date birthdate, String phoneNumber, String education) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createTourGuideUser'");
+        return this.toursRepository.createTourGuideUser(username, password, fullName, email, birthdate, phoneNumber, education);
     }
 
     @Override
@@ -65,8 +63,7 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public Stop createStop(String name, String description) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createStop'");
+        return this.toursRepository.createStop(name, description);
     }
 
     @Override
@@ -108,8 +105,9 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public Supplier createSupplier(String businessName, String authorizationNumber) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createSupplier'");
+        Supplier supplier = new Supplier(businessName, authorizationNumber);
+        supplier = this.toursRepository.createSupplier(supplier);
+        return supplier;
     }
 
     @Override
@@ -145,14 +143,16 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public Purchase createPurchase(String code, Route route, User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createPurchase'");
+        Purchase purchase = new Purchase(code, user, route);
+        purchase = this.toursRepository.createPurchase(purchase);
+        return purchase;
     }
 
     @Override
     public Purchase createPurchase(String code, Date date, Route route, User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createPurchase'");
+        Purchase purchase = new Purchase(code,date, user, route);
+        purchase = this.toursRepository.createPurchase(purchase);
+        return purchase;
     }
 
     @Override

@@ -13,6 +13,14 @@ public class Stop {
     @Column
     protected String description;
 
+    public Stop(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
+    public Stop() {
+
+    }
 
     public Long getId() {
         return id;

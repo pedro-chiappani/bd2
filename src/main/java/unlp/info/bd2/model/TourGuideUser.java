@@ -18,6 +18,11 @@ public class TourGuideUser extends User {
     @ManyToMany(mappedBy = "tourGuideList")
     private List<Route> routes;
 
+    public TourGuideUser() {}
+    public TourGuideUser(String username, String password, String name, String email, Date birthdate, String phoneNumber,String education) {
+        super(username, password, name, email, birthdate, phoneNumber);
+        this.education = education;
+    }
 
     public String getEducation() {
         return education;

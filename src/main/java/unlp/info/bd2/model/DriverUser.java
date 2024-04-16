@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,6 +16,12 @@ public class DriverUser extends User {
 
     @ManyToMany(mappedBy = "driverList")
     private List<Route> routes;
+
+    public DriverUser() {}
+    public DriverUser(String username, String password, String name, String email, Date birthdate, String phoneNumber, String expedient) {
+        super(username, password, name, email, birthdate, phoneNumber);
+        this.expedient = expedient;
+    }
 
     public String getExpedient() {
         return expedient;

@@ -14,7 +14,7 @@ public class Purchase {
     protected String code;
     @Column(nullable = false)
     protected float totalPrice;
-    @Column(nullable = false)
+    @Column()
     protected Date date;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -31,6 +31,21 @@ public class Purchase {
 
     @OneToMany(mappedBy = "purchase")
     private List<ItemService> itemServiceList;
+
+    public Purchase() {}
+    public Purchase(String code, Date date, User user, Route route) {
+        this.code = code;
+        this.date = date;
+        this.route = route;
+        this.user = user;
+
+    }
+    public Purchase(String code, User user, Route route) {
+        this.code = code;
+        this.route = route;
+        this.user = user;
+
+    }
 
 
 
