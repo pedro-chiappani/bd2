@@ -1,28 +1,34 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "users")
+
 public class User {
-
+    @Id
     private Long id;
+    @Column(unique = true, nullable = false)
+    protected String username;
+    @Column(nullable = false)
+    protected String password;
+    @Column(nullable = false)
+    protected String name;
+    @Column(unique = true, nullable = false)
+    protected String email;
+    @Column(nullable = false)
+    protected Date birthdate;
+    @Column
+    protected String phoneNumber;
+    @Column
+    protected boolean active;
 
-    private String username;
-
-    private String password;
-
-    private String name;
-
-    private String email;
-
-    private Date birthdate;
-
-    private String phoneNumber;
-
-    private boolean active;
-
-    private List<Purchase> purchaseList;
+    @OneToMany(mappedBy = "user")
+    protected List<Purchase> purchaseList;
 
 
     public Long getId() {

@@ -1,24 +1,35 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "purchases")
 public class Purchase {
-
+    @Id
     Long id;
+    @Column(unique = true, nullable = false)
+    protected String code;
+    @Column(nullable = false)
+    protected float totalPrice;
+    @Column(nullable = false)
+    protected Date date;
 
-    private String code;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    protected User user;
 
-    private float totalPrice;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "route_id", referencedColumnName = "id")
+    protected Route route;
 
-    private Date date;
+    @OneToOne
+    @JoinColumn(name = "review_id", referencedColumnName = "id")
+    protected Review review;
 
-    private User user;
-
-    private Route route;
-
-    private Review review;
-
+    @OneToMany(mappedBy = "purchase")
     private List<ItemService> itemServiceList;
 
 

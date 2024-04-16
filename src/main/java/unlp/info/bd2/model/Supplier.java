@@ -1,15 +1,21 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
+import jakarta.persistence.Table;
+
 import java.util.List;
 
+@Entity
+@Table(name = "suppliers")
 public class Supplier {
-
+    @Id
     private Long id;
-
+    @Column(unique=true, nullable=false)
     private String businessName;
-
+    @Column(unique=true, nullable=false)
     private String authorizationNumber;
 
+    @OneToMany(mappedBy = "supplier")
     private List<Service> services;
 
     public Long getId() {

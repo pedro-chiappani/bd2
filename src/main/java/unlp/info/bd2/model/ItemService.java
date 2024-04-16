@@ -1,14 +1,19 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "item_services")
 public class ItemService {
-
+    @Id
     Long id;
-
+    @Column
     private int quantity;
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
-
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "service_id")
     private Service service;
 
     public Long getId() {

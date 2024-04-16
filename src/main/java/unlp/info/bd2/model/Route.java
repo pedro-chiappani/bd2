@@ -1,25 +1,47 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
+import org.hibernate.engine.internal.Cascade;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "routes")
 public class Route {
 
+    @Id
     private Long id;
+    @Column
+    protected String name;
+    @Column
+    protected float price;
+    @Column
+    protected float totalKm;
+    @Column
+    protected int maxNumberUsers;
 
-    private String name;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "routes_stops",
+    joinColumns = @JoinColumn(name = "route_id"),
+    inverseJoinColumns = @JoinColumn(name = "stop_id")
+    )
+    protected List<Stop> stops;
 
-    private float price;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "routes_drivers",
+            joinColumns = @JoinColumn(name = "route_id"),
+            inverseJoinColumns = @JoinColumn(name = "driver_id")
+    )
+    protected List<DriverUser> driverList;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "routes_guides",
+            joinColumns = @JoinColumn(name = "route_id"),
+            inverseJoinColumns = @JoinColumn(name = "guide_id")
+    )
+    protected List<TourGuideUser> tourGuideList;
 
-    private float totalKm;
 
-    private int maxNumberUsers;
-
-    private List<Stop> stops;
-
-    private List<DriverUser> driverList;
-
-    private List<TourGuideUser> tourGuideList;
 
     public Long getId() {
         return id;

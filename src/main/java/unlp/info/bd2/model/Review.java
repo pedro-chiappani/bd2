@@ -1,15 +1,18 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "reviews")
 public class Review {
-
+    @Id
     private Long id;
-
-    private int rating;
-
-    private String comment;
-
-    private Purchase purchase;
+    @Column
+    protected int rating;
+    @Column
+    protected String comment;
+    @OneToOne(mappedBy = "review")
+    protected Purchase purchase;
 
 
     public Long getId() {

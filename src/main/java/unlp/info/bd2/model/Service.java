@@ -1,20 +1,27 @@
 package unlp.info.bd2.model;
 
+
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "services")
 public class Service {
-
+    @Id
     private Long id;
-
+    @Column(unique=true)
     private String name;
-
+    @Column
     private float price;
-
+    @Column
     private String description;
 
+    @OneToMany(mappedBy = "service")
     private List<ItemService> itemServiceList;
-
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     private Supplier supplier;
 
 
