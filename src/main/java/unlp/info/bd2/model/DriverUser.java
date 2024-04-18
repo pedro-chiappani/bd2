@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "drivers")
 public class DriverUser extends User {
 
     private String expedient;

@@ -9,6 +9,7 @@ import java.util.List;
 @Table(name = "purchases")
 public class Purchase {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
     @Column(unique = true, nullable = false)
     protected String code;

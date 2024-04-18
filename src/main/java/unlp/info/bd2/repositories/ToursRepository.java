@@ -1,17 +1,24 @@
 package unlp.info.bd2.repositories;
 
 import unlp.info.bd2.model.*;
+import unlp.info.bd2.utils.ToursException;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface ToursRepository {
 
-    User createUser(String username, String password, String fullName, String email, Date birthdate, String phoneNumber);
-    DriverUser createDriverUser(String username, String password, String fullName, String email, Date birthdate, String phoneNumber, String expedient);
-    TourGuideUser createTourGuideUser(String username, String password, String fullName, String email, Date birthdate, String phoneNumber, String education);
-    Stop createStop(String name, String description);
-    Route createRoute(String name, float price, float totalKM, int maxNumberUsers, List<Stop> stops);
+    void createUser(Object user) throws ToursException;
+    User getUserById(Long id);
+    User getUserByUsername(String username);
+    void createDriverUser(Object driver);
+    void createTourGuideUser(Object tourGuide);
+    void updateUser(Object user);
+    void createStop(Object Stop);
+    List<Stop> getStopByNameStart(String stopName);
+    void createRoute(Object route);
+    Route getRouteById(Long id);
+    List<Route> getRoutesBelowPrice(float price);
     Supplier createSupplier(Supplier supplier);
     Purchase createPurchase(Purchase purchase);
 }

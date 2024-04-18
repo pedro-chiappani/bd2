@@ -4,15 +4,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.repositories.ToursRepository;
 import unlp.info.bd2.utils.ToursException;
 
 public class ToursServiceImpl implements ToursService {
 
-    @Autowired
     private ToursRepository toursRepository;
 
     public ToursServiceImpl( ToursRepository toursRepository){
@@ -21,38 +18,43 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate, String phoneNumber) throws ToursException {
-
-        return this.toursRepository.createUser(username, password, fullName, email, birthdate, phoneNumber);
+        User usu = new User(username, password, fullName, email, birthdate, phoneNumber);
+        this.toursRepository.createUser(usu);
+        return usu;
     }
 
     @Override
     public DriverUser createDriverUser(String username, String password, String fullName, String email, Date birthdate,
             String phoneNumber, String expedient) throws ToursException {
-        return this.toursRepository.createDriverUser(username, password, fullName, email, birthdate, phoneNumber, expedient);
+        DriverUser usu = new DriverUser(username, password, fullName, email, birthdate, phoneNumber, expedient);
+        this.toursRepository.createDriverUser(usu);
+        return usu;
     }
 
     @Override
     public TourGuideUser createTourGuideUser(String username, String password, String fullName, String email,
             Date birthdate, String phoneNumber, String education) throws ToursException {
-        return this.toursRepository.createTourGuideUser(username, password, fullName, email, birthdate, phoneNumber, education);
+        TourGuideUser tourGuideUser = new TourGuideUser(username, password, fullName, email, birthdate, phoneNumber, education);
+        this.toursRepository.createTourGuideUser(tourGuideUser);
+        return tourGuideUser;
     }
 
     @Override
     public Optional<User> getUserById(Long id) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUserById'");
+        return Optional.ofNullable(this.toursRepository.getUserById(id));
     }
 
     @Override
     public Optional<User> getUserByUsername(String username) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUserByUsername'");
+        Optional <User> impress = Optional.ofNullable(this.toursRepository.getUserByUsername(username));
+        System.out.println(impress.get().getUsername());
+        return impress;
     }
 
     @Override
     public User updateUser(User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+        this.toursRepository.updateUser(user);
+        return user;
     }
 
     @Override
@@ -63,32 +65,32 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public Stop createStop(String name, String description) throws ToursException {
-        return this.toursRepository.createStop(name, description);
+        Stop parada = new Stop(name, description);
+        this.toursRepository.createStop(parada);
+        return parada;
     }
 
     @Override
     public List<Stop> getStopByNameStart(String name) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStopByNameStart'");
+        return this.toursRepository.getStopByNameStart(name);
     }
 
     @Override
     public Route createRoute(String name, float price, float totalKm, int maxNumberOfUsers, List<Stop> stops)
             throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createRoute'");
+        Route ruta = new Route(name, price, totalKm, maxNumberOfUsers, stops);
+        this.toursRepository.createRoute(ruta);
+        return ruta;
     }
 
     @Override
     public Optional<Route> getRouteById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRouteById'");
+        return Optional.ofNullable(this.toursRepository.getRouteById(id));
     }
 
     @Override
     public List<Route> getRoutesBelowPrice(float price) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutesBelowPrice'");
+        return this.toursRepository.getRoutesBelowPrice(price);
     }
 
     @Override

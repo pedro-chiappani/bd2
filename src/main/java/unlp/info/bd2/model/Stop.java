@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class Stop {
 
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column
     protected String name;

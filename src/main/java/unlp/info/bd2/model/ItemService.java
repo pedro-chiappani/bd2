@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 @Table(name = "item_services")
 public class ItemService {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
     @Column
     private int quantity;

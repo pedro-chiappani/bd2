@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "tour_guides")
 public class TourGuideUser extends User {
 
     private String education;

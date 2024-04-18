@@ -8,9 +8,9 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-
 public class User {
     @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true, nullable = false)
     protected String username;
@@ -39,6 +39,7 @@ public class User {
         this.birthdate = birthdate;
         this.phoneNumber = phoneNumber;
         this.active = true;
+        this.purchaseList = new ArrayList<Purchase>();
     }
 
     public Long getId() {
