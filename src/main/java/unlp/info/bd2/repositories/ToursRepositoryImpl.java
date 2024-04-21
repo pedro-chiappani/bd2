@@ -95,9 +95,53 @@ public class ToursRepositoryImpl implements ToursRepository {
     }
 
     @Override
-    public Supplier createSupplier(Supplier supplier) {
-        //persistir
-        return supplier;
+    public void updateRoute(Route route) {
+        this.sessionFactory.getCurrentSession().persist(route);
+    }
+
+    @Override
+    public void createSupplier(Supplier supplier) throws ToursException {
+        try{
+            this.sessionFactory.getCurrentSession().persist(supplier);
+        }
+        catch (ConstraintViolationException e){
+            throw new ToursException("Constraint Violation" + e.getMessage());
+        }
+
+    }
+
+    @Override
+    public void updateSupplier(Supplier supplier){
+        this.sessionFactory.getCurrentSession().persist(supplier);
+    }
+
+    @Override
+    public Supplier getSupplierById(Long id){
+        return this.sessionFactory.getCurrentSession().get(Supplier.class, id);
+    }
+
+    @Override
+    public Supplier getSupplierByAuthorizationNumber(String authorizationNumber) {
+        return (Supplier) this.sessionFactory.getCurrentSession().createQuery("from Supplier where authorizationNumber=:authorizationNumber").setParameter("authorizationNumber", authorizationNumber).uniqueResult();
+    }
+
+    @Override
+    public Service getServiceByNameAndSupplierId(String serviceName, Long supplierId) {
+        Supplier supplier = getSupplierById(supplierId);
+        return (Service) this.sessionFactory.getCurrentSession().createQuery("from Service where name=:serviceName and supplier=:supplier")
+                .setParameter("serviceName", serviceName)
+                .setParameter("supplier", supplier)
+                .uniqueResult();
+    }
+
+    @Override
+    public Service getServiceById(Long id) {
+        return this.sessionFactory.getCurrentSession().get(Service.class, id);
+    }
+
+    @Override
+    public void updateService(Service service) {
+        this.sessionFactory.getCurrentSession().persist(service);
     }
 
     @Override

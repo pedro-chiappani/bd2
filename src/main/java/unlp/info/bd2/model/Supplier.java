@@ -3,6 +3,7 @@ package unlp.info.bd2.model;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,12 +17,14 @@ public class Supplier {
     @Column(unique=true, nullable=false)
     private String authorizationNumber;
 
-    @OneToMany(mappedBy = "supplier")
+    @OneToMany(cascade = CascadeType.ALL
+            , mappedBy = "supplier")
     private List<Service> services;
 
     public Supplier(String businessName, String authorizationNumber) {
         this.businessName = businessName;
         this.authorizationNumber = authorizationNumber;
+        this.services = new ArrayList<Service>();
     }
 
     public Supplier() {
@@ -59,5 +62,7 @@ public class Supplier {
     public void setServices(List<Service> services) {
         this.services = services;
     }
+
+    public void addService(Service service) {this.services.add(service);}
 
 }

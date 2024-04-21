@@ -46,9 +46,8 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public Optional<User> getUserByUsername(String username) throws ToursException {
-        Optional <User> impress = Optional.ofNullable(this.toursRepository.getUserByUsername(username));
-        System.out.println(impress.get().getUsername());
-        return impress;
+        return Optional.ofNullable(this.toursRepository.getUserByUsername(username));
+
     }
 
     @Override
@@ -95,52 +94,73 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public void assignDriverByUsername(String username, Long idRoute) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'assignDriverByUsername'");
+        try {
+            Route route = this.toursRepository.getRouteById(idRoute);
+            DriverUser driverUser = (DriverUser) this.toursRepository.getUserByUsername(username);
+            route.addDriver(driverUser);
+            this.toursRepository.updateRoute(route);
+        }
+        catch (Exception e) {
+            throw new ToursException("No pudo realizarse la asignación");
+        }
     }
 
     @Override
     public void assignTourGuideByUsername(String username, Long idRoute) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'assignTourGuideByUsername'");
+        try{
+            Route route = this.toursRepository.getRouteById(idRoute);
+            TourGuideUser tourGuideUser = (TourGuideUser) this.toursRepository.getUserByUsername(username);
+            route.addTourGuide(tourGuideUser);
+            this.toursRepository.updateRoute(route);
+        }
+        catch (Exception e) {
+            throw new ToursException("No pudo realizarse la asignación");
+        }
     }
 
     @Override
     public Supplier createSupplier(String businessName, String authorizationNumber) throws ToursException {
         Supplier supplier = new Supplier(businessName, authorizationNumber);
-        supplier = this.toursRepository.createSupplier(supplier);
+        this.toursRepository.createSupplier(supplier);
         return supplier;
     }
 
     @Override
     public Service addServiceToSupplier(String name, float price, String description, Supplier supplier)
             throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addServiceToSupplier'");
+       Service service = new Service(name, price, description,supplier);
+       supplier.addService(service);
+       this.toursRepository.updateSupplier(supplier);
+       return service;
     }
 
     @Override
     public Service updateServicePriceById(Long id, float newPrice) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateServicePriceById'");
+        try{
+            Service service = this.toursRepository.getServiceById(id);
+            service.setPrice(newPrice);
+            this.toursRepository.updateService(service);
+            return service;
+        }
+        catch (Exception e){
+            throw new ToursException("No existe el producto");
+        }
+
     }
 
     @Override
     public Optional<Supplier> getSupplierById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSupplierById'");
+        return Optional.ofNullable(this.toursRepository.getSupplierById(id));
     }
 
     @Override
     public Optional<Supplier> getSupplierByAuthorizationNumber(String authorizationNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSupplierByAuthorizationNumber'");
+        return Optional.ofNullable(this.toursRepository.getSupplierByAuthorizationNumber(authorizationNumber));
     }
 
     @Override
     public Optional<Service> getServiceByNameAndSupplierId(String name, Long id) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getServiceByNameAndSupplierId'");
+        return Optional.ofNullable(this.toursRepository.getServiceByNameAndSupplierId(name, id));
     }
 
     @Override

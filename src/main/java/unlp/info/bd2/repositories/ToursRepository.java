@@ -19,7 +19,14 @@ public interface ToursRepository {
     void createRoute(Object route);
     Route getRouteById(Long id);
     List<Route> getRoutesBelowPrice(float price);
-    Supplier createSupplier(Supplier supplier);
+    void updateRoute(Route route);
+    void createSupplier(Supplier supplier) throws ToursException;
+    void updateSupplier(Supplier supplier);
+    Supplier getSupplierById(Long id);
+    Supplier getSupplierByAuthorizationNumber(String authorizationNumber);
+    Service getServiceByNameAndSupplierId(String serviceName, Long supplierId);
+    Service getServiceById(Long id);
+    void updateService(Service service);
     Purchase createPurchase(Purchase purchase);
 }
 
