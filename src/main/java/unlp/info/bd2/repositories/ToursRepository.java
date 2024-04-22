@@ -9,22 +9,21 @@ import unlp.info.bd2.model.Service;
 import unlp.info.bd2.model.Supplier;
 import unlp.info.bd2.model.TourGuideUser;
 import unlp.info.bd2.model.User;
-import unlp.info.bd2.utils.ToursException;
 
 public interface ToursRepository {
 
-    List<User> getAllPurchasesOfUsername(String username) throws ToursException;
-    List<User> getUsersSpendingMoreThan(int mount) throws ToursException;
-    List<Supplier> getTopNSuppliersInPurchase(int cant) throws ToursException;
-    List<Purchase> getTop10MoreExpensivePurchasesInServices() throws ToursException;
-    List<User> getTop5UsersMorePurchases() throws ToursException;
-    long getCountOfPurchasesBetweenDates(Date fecha1, Date fecha2) throws ToursException;
-    List<Route> getRoutesWithStop(Route route) throws ToursException;
-    Long getMaxStopOfRoutes() throws ToursException;
-    List<Route> getRoutesNotSell() throws ToursException;
-    List<Route> getTop3RoutesWithMaxRating() throws ToursException;
-    Service getMostDemandedService() throws ToursException;
-    List<Service> getServiceNoAddedToPurchases() throws ToursException;
-    List<TourGuideUser> getTourGuidesWithRating1() throws ToursException;
+    List<User> getAllPurchasesOfUsername(String username);
+    List<User> getUsersSpendingMoreThan(int mount);
+    List<Supplier> getTopNSuppliersInPurchase(int cant);
+    List<Purchase> getTop10MoreExpensivePurchasesInServices();
+    List<User> getTop5UsersMorePurchases();
+    long getCountOfPurchasesBetweenDates(Date fecha1, Date fecha2);
+    List<Route> getRoutesWithStop(Route route);
+    Long getMaxStopOfRoutes();
+    List<Route> getRoutesNotSell();
+    List<Route> getTop3RoutesWithMaxRating();
+    Service getMostDemandedService();
+    List<Service> getServiceNoAddedToPurchases();
+    List<TourGuideUser> getTourGuidesWithRating1();
 
 }
