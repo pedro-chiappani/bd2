@@ -1,25 +1,57 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "purchases")
 public class Purchase {
-
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
+    @Column(unique = true, nullable = false)
+    protected String code;
+    @Column(nullable = false)
+    protected float totalPrice;
+    @Column()
+    protected Date date;
 
-    private String code;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    protected User user;
 
-    private float totalPrice;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "route_id", referencedColumnName = "id")
+    protected Route route;
 
-    private Date date;
+    @OneToOne
+    @JoinColumn(name = "review_id", referencedColumnName = "id")
+    protected Review review;
 
-    private User user;
-
-    private Route route;
-
-    private Review review;
-
+    @OneToMany(mappedBy = "purchase")
     private List<ItemService> itemServiceList;
+
+    public Purchase() {}
+    public Purchase(String code, Date date, User user, Route route) {
+        this.code = code;
+        this.date = date;
+        this.route = route;
+        this.user = user;
+        this.totalPrice = route.getPrice();
+        this.itemServiceList = new ArrayList<ItemService>();
+
+    }
+    public Purchase(String code, User user, Route route) {
+        this.code = code;
+        this.route = route;
+        this.user = user;
+        this.totalPrice = route.getPrice();
+        this.itemServiceList = new ArrayList<ItemService>();
+
+    }
 
 
 
@@ -45,6 +77,10 @@ public class Purchase {
 
     public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void addPrice(float price) {
+        this.totalPrice += price;
     }
 
     public Date getDate() {
@@ -85,5 +121,10 @@ public class Purchase {
 
     public void setItemServiceList(List<ItemService> itemServiceList) {
         this.itemServiceList = itemServiceList;
+    }
+
+    public void addItemService(ItemService itemService){
+        this.itemServiceList.add(itemService);
+        this.addPrice(itemService.getQuantity() * itemService.getService().getPrice());
     }
 }

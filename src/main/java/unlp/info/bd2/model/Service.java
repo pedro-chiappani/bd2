@@ -1,21 +1,39 @@
 package unlp.info.bd2.model;
 
+
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "services")
 public class Service {
-
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-
+    @Column(unique=true)
     private String name;
-
+    @Column
     private float price;
-
+    @Column
     private String description;
 
+    @OneToMany(mappedBy = "service")
     private List<ItemService> itemServiceList;
-
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     private Supplier supplier;
+
+    public Service(){};
+    public Service(String name, float price, String description, Supplier supplier) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.supplier = supplier;
+
+    }
+
 
 
     public Long getId() {
