@@ -17,6 +17,13 @@ public class ItemService {
     @JoinColumn(name = "service_id")
     private Service service;
 
+    public ItemService() {}
+    public ItemService(int quantity, Purchase purchase, Service service) {
+        this.quantity = quantity;
+        this.purchase = purchase;
+        this.service = service;
+    }
+
     public Long getId() {
         return id;
     }

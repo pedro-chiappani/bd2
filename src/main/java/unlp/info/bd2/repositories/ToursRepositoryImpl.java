@@ -3,7 +3,6 @@ package unlp.info.bd2.repositories;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.utils.ToursException;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ToursRepositoryImpl implements ToursRepository {
@@ -145,9 +144,42 @@ public class ToursRepositoryImpl implements ToursRepository {
     }
 
     @Override
-    public Purchase createPurchase(Purchase purchase) {
-        //persistir
-        return purchase;
+    public void createPurchase(Purchase purchase) throws ToursException {
+        try{
+            this.sessionFactory.getCurrentSession().persist(purchase);
+        }
+        catch (ConstraintViolationException e){
+            throw new ToursException("Constraint Violation" + e.getMessage());
+        }
+    }
+
+    @Override
+    public void createItemService(ItemService itemService) {
+        this.sessionFactory.getCurrentSession().persist(itemService);
+    }
+
+    @Override
+    public Purchase getPurchaseByCode(String code) {
+        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where code=:code")
+                .setParameter("code", code)
+                .uniqueResult();
+    }
+
+
+    @Override
+    public List<Purchase> getRoutePurchases(Route route) {
+        return this.sessionFactory.getCurrentSession().createQuery("from Purchase where route=:route")
+                .setParameter("route",route)
+                .getResultList();
+    }
+
+    @Override
+    public Purchase getPurchaseByUserAndDate(User user, Date date, Route route) {
+        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user and date=:date and route=:route")
+                .setParameter("user", user)
+                .setParameter("date", date)
+                .setParameter("route", route)
+                .uniqueResult();
     }
 
 }

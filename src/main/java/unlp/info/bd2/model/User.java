@@ -106,6 +106,10 @@ public class User {
         this.purchaseList = purchaseList;
     }
 
+    public void addPurchase(Purchase purchase) {
+        this.purchaseList.add(purchase);
+    }
+
     public boolean isActive() {
         return active;
     }

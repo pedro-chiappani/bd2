@@ -166,27 +166,34 @@ public class ToursServiceImpl implements ToursService {
     @Override
     public Purchase createPurchase(String code, Route route, User user) throws ToursException {
         Purchase purchase = new Purchase(code, user, route);
-        purchase = this.toursRepository.createPurchase(purchase);
+        user.addPurchase(purchase);
+        this.toursRepository.createPurchase(purchase);
         return purchase;
     }
 
     @Override
     public Purchase createPurchase(String code, Date date, Route route, User user) throws ToursException {
-        Purchase purchase = new Purchase(code,date, user, route);
-        purchase = this.toursRepository.createPurchase(purchase);
+
+        if(route.getMaxNumberUsers() <= this.toursRepository.getRoutePurchases(route).size()){
+            throw new ToursException("No puede realizarse la compra");
+        }
+        Purchase purchase = new Purchase(code, date, user, route);
+        user.addPurchase(purchase);
+        this.toursRepository.createPurchase(purchase);
         return purchase;
     }
 
     @Override
     public ItemService addItemToPurchase(Service service, int quantity, Purchase purchase) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addItemToPurchase'");
+       ItemService itemService = new ItemService(quantity, purchase, service);
+       purchase.addItemService(itemService);
+       this.toursRepository.createItemService(itemService);
+       return itemService;
     }
 
     @Override
     public Optional<Purchase> getPurchaseByCode(String code) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPurchaseByCode'");
+        return Optional.ofNullable(this.toursRepository.getPurchaseByCode(code));
     }
 
     @Override

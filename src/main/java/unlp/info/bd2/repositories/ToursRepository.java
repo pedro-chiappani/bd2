@@ -3,6 +3,7 @@ package unlp.info.bd2.repositories;
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.utils.ToursException;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,11 @@ public interface ToursRepository {
     Service getServiceByNameAndSupplierId(String serviceName, Long supplierId);
     Service getServiceById(Long id);
     void updateService(Service service);
-    Purchase createPurchase(Purchase purchase);
+    void createPurchase(Purchase purchase) throws ToursException;
+    void createItemService(ItemService itemService);
+    Purchase getPurchaseByCode(String code);
+    List<Purchase> getRoutePurchases(Route route);
+    Purchase getPurchaseByUserAndDate(User user, Date date, Route route);
 }
 
 

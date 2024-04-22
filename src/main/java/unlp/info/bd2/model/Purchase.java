@@ -2,6 +2,7 @@ package unlp.info.bd2.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -39,12 +40,16 @@ public class Purchase {
         this.date = date;
         this.route = route;
         this.user = user;
+        this.totalPrice = route.getPrice();
+        this.itemServiceList = new ArrayList<ItemService>();
 
     }
     public Purchase(String code, User user, Route route) {
         this.code = code;
         this.route = route;
         this.user = user;
+        this.totalPrice = route.getPrice();
+        this.itemServiceList = new ArrayList<ItemService>();
 
     }
 
@@ -72,6 +77,10 @@ public class Purchase {
 
     public void setTotalPrice(float totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public void addPrice(float price) {
+        this.totalPrice += price;
     }
 
     public Date getDate() {
@@ -112,5 +121,10 @@ public class Purchase {
 
     public void setItemServiceList(List<ItemService> itemServiceList) {
         this.itemServiceList = itemServiceList;
+    }
+
+    public void addItemService(ItemService itemService){
+        this.itemServiceList.add(itemService);
+        this.addPrice(itemService.getQuantity() * itemService.getService().getPrice());
     }
 }
