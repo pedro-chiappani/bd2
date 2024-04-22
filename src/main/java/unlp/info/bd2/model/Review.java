@@ -12,9 +12,15 @@ public class Review {
     protected int rating;
     @Column
     protected String comment;
-    @OneToOne(mappedBy = "review")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "review")
     protected Purchase purchase;
 
+    public Review() {}
+    public Review(int rating, String comment, Purchase purchase) {
+        this.rating = rating;
+        this.comment = comment;
+        this.purchase = purchase;
+    }
 
     public Long getId() {
         return id;

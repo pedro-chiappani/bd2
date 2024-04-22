@@ -12,12 +12,14 @@ import unlp.info.bd2.utils.ToursException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ToursRepositoryImpl implements ToursRepository {
 
     @Autowired
     private SessionFactory sessionFactory;
+    private User user;
 
     public ToursRepositoryImpl() {}
 
@@ -181,5 +183,26 @@ public class ToursRepositoryImpl implements ToursRepository {
                 .setParameter("route", route)
                 .uniqueResult();
     }
+
+    @Override
+    public void deletePurchase(Purchase purchase) {
+        this.sessionFactory.getCurrentSession().remove(purchase);
+    }
+
+    @Override
+    public void createReview(Review review) {
+        this.sessionFactory.getCurrentSession().persist(review);
+    }
+
+    @Override
+    public void removeUser(User user) {
+        this.sessionFactory.getCurrentSession().remove(user);
+    }
+
+    @Override
+    public Optional<TourGuideUser> getTourGuideUserById(Long id) {
+        return Optional.ofNullable(this.sessionFactory.getCurrentSession().get(TourGuideUser.class, id));
+    }
+
 
 }

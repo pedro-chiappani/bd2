@@ -31,6 +31,7 @@ public class Service {
         this.price = price;
         this.description = description;
         this.supplier = supplier;
+        this.itemServiceList = new ArrayList<>();
 
     }
 
@@ -70,6 +71,10 @@ public class Service {
 
     public List<ItemService> getItemServiceList() {
         return itemServiceList;
+    }
+
+    public void addItemService(ItemService itemService) {
+        this.itemServiceList.add(itemService);
     }
 
     public void setItemServiceList(List<ItemService> itemServiceList) {

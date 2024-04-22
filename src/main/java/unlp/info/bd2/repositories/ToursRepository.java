@@ -33,6 +33,14 @@ public interface ToursRepository {
     Purchase getPurchaseByCode(String code);
     List<Purchase> getRoutePurchases(Route route);
     Purchase getPurchaseByUserAndDate(User user, Date date, Route route);
+
+    void deletePurchase(Purchase purchase);
+
+    void createReview(Review review);
+
+    void removeUser(User user);
+
+    Optional<TourGuideUser> getTourGuideUserById(Long id);
 }
 
 

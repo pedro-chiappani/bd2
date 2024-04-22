@@ -117,4 +117,8 @@ public class User {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    public void deactivate(){
+        this.active = false;
+    }
 }

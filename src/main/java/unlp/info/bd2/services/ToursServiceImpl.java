@@ -58,8 +58,22 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public void deleteUser(User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteUser'");
+        Optional<TourGuideUser> tourGuideUser = this.toursRepository.getTourGuideUserById(user.getId());
+        if (!tourGuideUser.isEmpty()) {
+            TourGuideUser tourGuideUser1 = (TourGuideUser) tourGuideUser.get();
+            if (!tourGuideUser1.getRoutes().isEmpty())
+                throw new ToursException("El usuario no puede ser desactivado");
+        }
+        if (user.getPurchaseList().isEmpty()) {
+            this.toursRepository.removeUser(user);
+        }
+
+        if(user.isActive()){
+            user.deactivate();
+        }
+        else {
+            throw new ToursException("El usuario se encuentra desactivado");
+        }
     }
 
     @Override
@@ -111,6 +125,7 @@ public class ToursServiceImpl implements ToursService {
             Route route = this.toursRepository.getRouteById(idRoute);
             TourGuideUser tourGuideUser = (TourGuideUser) this.toursRepository.getUserByUsername(username);
             route.addTourGuide(tourGuideUser);
+            tourGuideUser.addRoute(route);
             this.toursRepository.updateRoute(route);
         }
         catch (Exception e) {
@@ -187,6 +202,7 @@ public class ToursServiceImpl implements ToursService {
     public ItemService addItemToPurchase(Service service, int quantity, Purchase purchase) throws ToursException {
        ItemService itemService = new ItemService(quantity, purchase, service);
        purchase.addItemService(itemService);
+       service.addItemService(itemService);
        this.toursRepository.createItemService(itemService);
        return itemService;
     }
@@ -198,14 +214,15 @@ public class ToursServiceImpl implements ToursService {
 
     @Override
     public void deletePurchase(Purchase purchase) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deletePurchase'");
+        this.toursRepository.deletePurchase(purchase);
     }
 
     @Override
     public Review addReviewToPurchase(int rating, String comment, Purchase purchase) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addReviewToPurchase'");
+        Review review = new Review(rating, comment, purchase);
+        purchase.setReview(review);
+        this.toursRepository.createReview(review);
+        return review;
     }
 
     @Override

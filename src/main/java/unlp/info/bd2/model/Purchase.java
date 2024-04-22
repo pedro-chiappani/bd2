@@ -27,11 +27,11 @@ public class Purchase {
     @JoinColumn(name = "route_id", referencedColumnName = "id")
     protected Route route;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "review_id", referencedColumnName = "id")
     protected Review review;
 
-    @OneToMany(mappedBy = "purchase")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "purchase")
     private List<ItemService> itemServiceList;
 
     public Purchase() {}
