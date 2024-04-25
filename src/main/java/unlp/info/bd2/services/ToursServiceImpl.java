@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.transaction.annotation.Transactional;
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.repositories.ToursRepository;
 import unlp.info.bd2.utils.ToursException;
@@ -194,7 +195,7 @@ public class ToursServiceImpl implements ToursService {
         }
         Purchase purchase = new Purchase(code, date, user, route);
         user.addPurchase(purchase);
-        this.toursRepository.createPurchase(purchase);
+        this.toursRepository.updateUser(user);
         return purchase;
     }
 

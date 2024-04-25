@@ -1,9 +1,7 @@
 package unlp.info.bd2.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.List;
@@ -11,9 +9,13 @@ import java.util.List;
 @Entity
 public class DriverUser extends User {
 
+    @Column(name = "expedient", length = 50)
     private String expedient;
 
-    @ManyToMany(mappedBy = "driverList")
+    @ManyToMany(mappedBy = "driverList", fetch = FetchType.LAZY,
+    cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE})
     private List<Route> routes;
 
     public DriverUser() {}

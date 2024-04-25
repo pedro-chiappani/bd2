@@ -19,7 +19,6 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Autowired
     private SessionFactory sessionFactory;
-    private User user;
 
     public ToursRepositoryImpl() {}
 
@@ -162,7 +161,7 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public Purchase getPurchaseByCode(String code) {
-        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where code=:code")
+        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where code=:code", Purchase.class)
                 .setParameter("code", code)
                 .uniqueResult();
     }

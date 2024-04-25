@@ -8,11 +8,11 @@ public class Review {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(name = "rating")
     protected int rating;
-    @Column
+    @Column(name = "comment", length = 255)
     protected String comment;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "review")
+    @OneToOne(mappedBy = "review", fetch = FetchType.EAGER)
     protected Purchase purchase;
 
     public Review() {}

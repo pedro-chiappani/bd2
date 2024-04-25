@@ -8,26 +8,30 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+//@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false, updatable = false)
+
+    @Column(name = "username",unique = true, nullable = false, updatable = false, length = 30)
     protected String username;
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false, length = 30)
     protected String password;
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false, length = 30)
     protected String name;
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", unique = true, nullable = false, length = 50)
     protected String email;
-    @Column(nullable = false)
+    @Column(name = "birthdate", nullable = false)
     protected Date birthdate;
-    @Column
+    @Column(name = "phone_number", length = 30)
     protected String phoneNumber;
-    @Column
+    @Column(name = "active")
     protected boolean active;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     protected List<Purchase> purchaseList;
 
     public User() {}
