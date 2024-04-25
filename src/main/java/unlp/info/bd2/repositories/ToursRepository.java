@@ -12,9 +12,7 @@ public interface ToursRepository {
     void createUser(Object user) throws ToursException;
     User getUserById(Long id);
     User getUserByUsername(String username);
-    void createDriverUser(Object driver);
-    void createTourGuideUser(Object tourGuide);
-    void updateUser(Object user);
+    void updateUser(Object user) throws ToursException;
     void createStop(Object Stop);
     List<Stop> getStopByNameStart(String stopName);
     void createRoute(Object route);
@@ -28,19 +26,11 @@ public interface ToursRepository {
     Service getServiceByNameAndSupplierId(String serviceName, Long supplierId);
     Service getServiceById(Long id);
     void updateService(Service service);
-    void createPurchase(Purchase purchase) throws ToursException;
-    void createItemService(ItemService itemService);
+    void updatePurchase(Purchase purchase);
     Purchase getPurchaseByCode(String code);
     List<Purchase> getRoutePurchases(Route route);
-    Purchase getPurchaseByUserAndDate(User user, Date date, Route route);
-
     void deletePurchase(Purchase purchase);
-
-    void createReview(Review review);
-
     void removeUser(User user);
-
-    Optional<TourGuideUser> getTourGuideUserById(Long id);
 }
 
 

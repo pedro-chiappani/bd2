@@ -1,8 +1,5 @@
 package unlp.info.bd2.repositories;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,22 +38,19 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public User getUserByUsername(String username) {
-        return (User) this.sessionFactory.getCurrentSession().createQuery("from User where username=:username").setParameter("username",username).uniqueResult();
+        return (User) this.sessionFactory.getCurrentSession().createQuery("from User where username=:username", User.class)
+                .setParameter("username",username)
+                .uniqueResult();
     }
 
     @Override
-    public void createDriverUser(Object driver) {
-        this.sessionFactory.getCurrentSession().persist(driver);
-    }
-
-    @Override
-    public void createTourGuideUser(Object tourGuideUser) {
-        this.sessionFactory.getCurrentSession().persist(tourGuideUser);
-    }
-
-    @Override
-    public void updateUser(Object user) {
-        this.sessionFactory.getCurrentSession().persist(user);
+    public void updateUser(Object user) throws ToursException{
+        try {
+            this.sessionFactory.getCurrentSession().persist(user);
+        }
+        catch (ConstraintViolationException e){
+            throw new ToursException("Constraint Violation" + e.getMessage());
+        }
     }
 
     @Override
@@ -66,12 +60,9 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public List<Stop> getStopByNameStart(String stopName) {
-        CriteriaBuilder cb = sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<Stop> cr = cb.createQuery(Stop.class);
-        Root<Stop> stop = cr.from(Stop.class);
-
-        cr.select(stop).where(cb.like(stop.get("name"), stopName+"%"));
-        return sessionFactory.getCurrentSession().createQuery(cr).getResultList();
+        return this.sessionFactory.getCurrentSession().createQuery("from Stop where name like :nombre", Stop.class).
+                setParameter("nombre", stopName + "%").
+                getResultList();
     }
 
     @Override
@@ -86,12 +77,10 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public List<Route> getRoutesBelowPrice(float price) {
-        CriteriaBuilder cb = sessionFactory.getCriteriaBuilder();
-        CriteriaQuery<Route> cr = cb.createQuery(Route.class);
-        Root<Route> route = cr.from(Route.class);
 
-        cr.select(route).where(cb.lt(route.get("price"), price));
-        return sessionFactory.getCurrentSession().createQuery(cr).getResultList();
+        return this.sessionFactory.getCurrentSession().createQuery("from Route where price < :price", Route.class).
+                setParameter("price", price).
+                getResultList();
     }
 
     @Override
@@ -122,15 +111,18 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public Supplier getSupplierByAuthorizationNumber(String authorizationNumber) {
-        return (Supplier) this.sessionFactory.getCurrentSession().createQuery("from Supplier where authorizationNumber=:authorizationNumber").setParameter("authorizationNumber", authorizationNumber).uniqueResult();
+        return (Supplier) this.sessionFactory.getCurrentSession()
+                .createQuery("from Supplier where authorizationNumber=:authorizationNumber", Supplier.class)
+                .setParameter("authorizationNumber", authorizationNumber)
+                .uniqueResult();
     }
 
     @Override
     public Service getServiceByNameAndSupplierId(String serviceName, Long supplierId) {
-        Supplier supplier = getSupplierById(supplierId);
-        return (Service) this.sessionFactory.getCurrentSession().createQuery("from Service where name=:serviceName and supplier=:supplier")
+        //Supplier supplier = getSupplierById(supplierId);
+        return (Service) this.sessionFactory.getCurrentSession().createQuery("from Service where name=:serviceName and supplier.id=:supplier", Service.class)
                 .setParameter("serviceName", serviceName)
-                .setParameter("supplier", supplier)
+                .setParameter("supplier", supplierId)
                 .uniqueResult();
     }
 
@@ -145,18 +137,8 @@ public class ToursRepositoryImpl implements ToursRepository {
     }
 
     @Override
-    public void createPurchase(Purchase purchase) throws ToursException {
-        try{
-            this.sessionFactory.getCurrentSession().persist(purchase);
-        }
-        catch (ConstraintViolationException e){
-            throw new ToursException("Constraint Violation" + e.getMessage());
-        }
-    }
-
-    @Override
-    public void createItemService(ItemService itemService) {
-        this.sessionFactory.getCurrentSession().persist(itemService);
+    public void updatePurchase(Purchase purchase) {
+        this.sessionFactory.getCurrentSession().persist(purchase);
     }
 
     @Override
@@ -169,39 +151,23 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public List<Purchase> getRoutePurchases(Route route) {
-        return this.sessionFactory.getCurrentSession().createQuery("from Purchase where route=:route")
+        return this.sessionFactory.getCurrentSession().createQuery("from Purchase where route=:route", Purchase.class)
                 .setParameter("route",route)
                 .getResultList();
     }
 
-    @Override
-    public Purchase getPurchaseByUserAndDate(User user, Date date, Route route) {
-        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user and date=:date and route=:route")
-                .setParameter("user", user)
-                .setParameter("date", date)
-                .setParameter("route", route)
-                .uniqueResult();
-    }
 
     @Override
     public void deletePurchase(Purchase purchase) {
         this.sessionFactory.getCurrentSession().remove(purchase);
     }
 
-    @Override
-    public void createReview(Review review) {
-        this.sessionFactory.getCurrentSession().persist(review);
-    }
 
     @Override
     public void removeUser(User user) {
         this.sessionFactory.getCurrentSession().remove(user);
     }
 
-    @Override
-    public Optional<TourGuideUser> getTourGuideUserById(Long id) {
-        return Optional.ofNullable(this.sessionFactory.getCurrentSession().get(TourGuideUser.class, id));
-    }
 
 
 }
