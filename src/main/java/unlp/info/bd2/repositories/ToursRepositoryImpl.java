@@ -40,7 +40,7 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public User getUserByUsername(String username) {
-        return (User) this.sessionFactory.getCurrentSession().createQuery("from User where username=:username").setParameter("username",username).uniqueResult();
+        return (User) this.sessionFactory.getCurrentSession().createQuery("from User where username=:username", User.class).setParameter("username",username).uniqueResult();
     }
 
     @Override
@@ -121,13 +121,13 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public Supplier getSupplierByAuthorizationNumber(String authorizationNumber) {
-        return (Supplier) this.sessionFactory.getCurrentSession().createQuery("from Supplier where authorizationNumber=:authorizationNumber").setParameter("authorizationNumber", authorizationNumber).uniqueResult();
+        return (Supplier) this.sessionFactory.getCurrentSession().createQuery("from Supplier where authorizationNumber=:authorizationNumber", Supplier.class).setParameter("authorizationNumber", authorizationNumber).uniqueResult();
     }
 
     @Override
     public Service getServiceByNameAndSupplierId(String serviceName, Long supplierId) {
         Supplier supplier = getSupplierById(supplierId);
-        return (Service) this.sessionFactory.getCurrentSession().createQuery("from Service where name=:serviceName and supplier=:supplier")
+        return (Service) this.sessionFactory.getCurrentSession().createQuery("from Service where name=:serviceName and supplier=:supplier", Service.class)
                 .setParameter("serviceName", serviceName)
                 .setParameter("supplier", supplier)
                 .uniqueResult();
@@ -160,7 +160,7 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public Purchase getPurchaseByCode(String code) {
-        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where code=:code")
+        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where code=:code", Purchase.class)
                 .setParameter("code", code)
                 .uniqueResult();
     }
@@ -168,95 +168,136 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public List<Purchase> getRoutePurchases(Route route) {
-        return this.sessionFactory.getCurrentSession().createQuery("from Purchase where route=:route")
+        return this.sessionFactory.getCurrentSession().createQuery("from Purchase where route=:route", Purchase.class)
                 .setParameter("route",route)
                 .getResultList();
     }
 
     @Override
     public Purchase getPurchaseByUserAndDate(User user, Date date, Route route) {
-        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user and date=:date and route=:route")
+        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user and date=:date and route=:route", Purchase.class)
                 .setParameter("user", user)
                 .setParameter("date", date)
                 .setParameter("route", route)
                 .uniqueResult();
-    public List<User> getAllPurchasesOfUsername(String username) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPurchasesOfUsername'");
     }
 
     @Override
-    public List<User> getUsersSpendingMoreThan(int mount) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUsersSpendingMoreThan'");
+    public List<Purchase> getAllPurchasesOfUsername(User user) {
+        return this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user", Purchase.class)
+                .setParameter("user", user)
+                .getResultList();
     }
 
     @Override
-    public List<Supplier> getTopNSuppliersInPurchase(int cant) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTopNSuppliersInPurchase'");
+    public List<User> getUserSpendingMoreThan(float mount){
+        List<User> users = this.sessionFactory.getCurrentSession().createQuery("SELECT u.* FROM users u JOIN purchases p ON u.id = p.user_id GROUP BY u.id HAVING SUM(p.amount) >= :mount", User.class)
+                .setParameter("mount", mount)
+                .getResultList();
+        return users;
+    }
+
+    @Override
+    public List<Supplier> getTopNSuppliersInPurchase(int n){
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select s, count(p) as purchaseCount " +
+                            "from Supplier s join s.services srv join srv.itemService si join si.purchase p " +
+                            "group by s.id order by purchaseCount desc", Supplier.class)
+                .setMaxResults(n)
+                .getResultList();
     }
 
     @Override
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop10MoreExpensivePurchasesInServices'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select distinct p from Purchase p " +
+                            "join fetch p.route r join fetch r.stops " +
+                            "join fetch p.itemServices i where size(p.itemServices) > 0 " +
+                            "order by p.totalPrice desc", Purchase.class)
+                .setMaxResults(10)
+                .getResultList();
     }
 
     @Override
     public List<User> getTop5UsersMorePurchases() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop5UsersMorePurchases'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select u, count(p) as purchaseCount " +
+                            "from User u join u.purchases p group by u.id " +
+                            "order by purchaseCount desc", User.class)
+                .setMaxResults(5)
+                .getResultList();
     }
 
     @Override
-    public long getCountOfPurchasesBetweenDates(Date fecha1, Date fecha2) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCountOfPurchasesBetweenDates'");
+    public long getCountOfPurchasesBetweenDates(Date begin, Date end){
+        return (long) this.sessionFactory.getCurrentSession().createQuery("select count p From Purchase p where p.date between :start and :end", Long.class)
+                .setParameter("start", begin)
+                .setParameter("end", end)
+                .uniqueResult();
     }
 
     @Override
-    public List<Route> getRoutesWithStop(Route route) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutesWithStop'");
+    public List<Route> getRoutesWithStop(Stop stop){
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("from Route where stop=:stop", Route.class)
+                .getResultList();
     }
 
     @Override
     public Long getMaxStopOfRoutes() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaxStopOfRoutes'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select max(size(r.stops)) from Route r", Long.class)
+                .getSingleResult();
     }
 
     @Override
     public List<Route> getRoutesNotSell() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutesNotSell'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select r from Route r " +
+                            "where not exist (select 1 from Purchase p where p.route = r)", Route.class)
+                .getResultList();
     }
 
     @Override
     public List<Route> getTop3RoutesWithMaxRating() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop3RoutesWithMaxRating'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select r from Route r " +
+                            "join r.purchases p join p.reviews rev " +
+                            "group by r order by avg(rev.rating) desc", Route.class)
+                .setMaxResults(3)
+                .getResultList();
+
     }
+
 
     @Override
     public Service getMostDemandedService() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMostDemandedService'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select s from Service s " +
+                            "join s.itemServices iserv " +
+                            "group by s order by count(iserv) desc", Service.class)
+                .setMaxResults(1)
+                .uniqueResult();
     }
+
 
     @Override
     public List<Service> getServiceNoAddedToPurchases() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getServiceNoAddedToPurchases'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select s from Service s " +
+                            "where not exist (select 1 from ItemService iserv where iserv.service = s)",
+                             Service.class)
+                .getResultList();
     }
+
 
     @Override
     public List<TourGuideUser> getTourGuidesWithRating1() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTourGuidesWithRating1'");
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select distinct tg from TourGuideUser tg " +
+                            "join tg.purchases p join p.reviews rev " +
+                            "where rev.rating = 1", TourGuideUser.class)
+                .getResultList();
     }
-
-
 
 }

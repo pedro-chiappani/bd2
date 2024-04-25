@@ -11,9 +11,6 @@ import unlp.info.bd2.model.TourGuideUser;
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.utils.ToursException;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 public interface ToursRepository {
 
@@ -44,13 +41,13 @@ public interface ToursRepository {
 
 
 
-    List<User> getAllPurchasesOfUsername(String username);
-    List<User> getUsersSpendingMoreThan(int mount);
+    List<Purchase> getAllPurchasesOfUsername(User user);
+    List<User> getUserSpendingMoreThan(float mount);
     List<Supplier> getTopNSuppliersInPurchase(int cant);
     List<Purchase> getTop10MoreExpensivePurchasesInServices();
     List<User> getTop5UsersMorePurchases();
     long getCountOfPurchasesBetweenDates(Date fecha1, Date fecha2);
-    List<Route> getRoutesWithStop(Route route);
+    List<Route> getRoutesWithStop(Stop stop);
     Long getMaxStopOfRoutes();
     List<Route> getRoutesNotSell();
     List<Route> getTop3RoutesWithMaxRating();
