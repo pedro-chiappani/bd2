@@ -1,25 +1,61 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
+import org.hibernate.engine.internal.Cascade;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "routes")
 public class Route {
 
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+    @Column
+    protected String name;
+    @Column
+    protected float price;
+    @Column
+    protected float totalKm;
+    @Column
+    protected int maxNumberUsers;
 
-    private String name;
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinTable(name = "routes_stops",
+    joinColumns = @JoinColumn(name = "route_id"),
+    inverseJoinColumns = @JoinColumn(name = "stop_id")
+    )
+    protected List<Stop> stops;
 
-    private float price;
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinTable(name = "routes_drivers",
+            joinColumns = @JoinColumn(name = "route_id"),
+            inverseJoinColumns = @JoinColumn(name = "driver_id")
+    )
+    protected List<DriverUser> driverList;
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinTable(name = "routes_guides",
+            joinColumns = @JoinColumn(name = "route_id"),
+            inverseJoinColumns = @JoinColumn(name = "guide_id")
+    )
+    protected List<TourGuideUser> tourGuideList;
 
-    private float totalKm;
+    public Route(String name, float price, float totalKm, int maxNumberUsers, List<Stop> stops){
+        this.name = name;
+        this.price = price;
+        this.totalKm = totalKm;
+        this.maxNumberUsers = maxNumberUsers;
+        this.stops = stops;
+        this.driverList = new ArrayList<>();
+        this.tourGuideList = new ArrayList<>();
 
-    private int maxNumberUsers;
+    }
 
-    private List<Stop> stops;
+    public Route() {
 
-    private List<DriverUser> driverList;
-
-    private List<TourGuideUser> tourGuideList;
+    }
 
     public Long getId() {
         return id;

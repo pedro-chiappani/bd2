@@ -1,15 +1,34 @@
 package unlp.info.bd2.model;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "item_services")
 public class ItemService {
-
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
-
+    @Column
     private int quantity;
 
+    @ManyToOne(cascade = {CascadeType.PERSIST,
+                        CascadeType.REFRESH
+                       }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "purchase_id")
     private Purchase purchase;
-
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    }, fetch = FetchType.EAGER)
+    @JoinColumn(name = "service_id")
     private Service service;
+
+    public ItemService() {}
+    public ItemService(int quantity, Purchase purchase, Service service) {
+        this.quantity = quantity;
+        this.purchase = purchase;
+        this.service = service;
+    }
 
     public Long getId() {
         return id;
