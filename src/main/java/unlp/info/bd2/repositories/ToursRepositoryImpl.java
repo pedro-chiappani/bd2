@@ -38,7 +38,7 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public User getUserByUsername(String username) {
-        return (User) this.sessionFactory.getCurrentSession().createQuery("from User where username=:username", User.class, User.class)
+        return (User) this.sessionFactory.getCurrentSession().createQuery("from User where username=:username", User.class)
                 .setParameter("username",username)
                 .uniqueResult();
     }
@@ -164,8 +164,13 @@ public class ToursRepositoryImpl implements ToursRepository {
 
 
     @Override
+    public void removeUser(User user) {
+        this.sessionFactory.getCurrentSession().remove(user);
+    }
+
+
     public Purchase getPurchaseByUserAndDate(User user, Date date, Route route) {
-        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user and date=:date and route=:route")
+        return (Purchase) this.sessionFactory.getCurrentSession().createQuery("from Purchase where user=:user and date=:date and route=:route", Purchase.class)
                 .setParameter("user", user)
                 .setParameter("date", date)
                 .setParameter("route", route)
