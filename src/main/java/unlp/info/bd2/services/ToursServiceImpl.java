@@ -270,6 +270,7 @@ public class ToursServiceImpl implements ToursService {
     @Override
     public List<User> getUserSpendingMoreThan(float mount) {
         List<User> usersMoreThan = this.toursRepository.getUserSpendingMoreThan(mount);
+        System.out.println(usersMoreThan);
         return usersMoreThan;
     }
 

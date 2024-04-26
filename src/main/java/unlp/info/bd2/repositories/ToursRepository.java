@@ -25,7 +25,7 @@ public interface ToursRepository {
     List<Route> getRoutesBelowPrice(float price);
     void updateRoute(Route route);
     void createSupplier(Supplier supplier) throws ToursException;
-    void updateSupplier(Supplier supplier);
+    void updateSupplier(Supplier supplier) throws ToursException;
     Supplier getSupplierById(Long id);
     Supplier getSupplierByAuthorizationNumber(String authorizationNumber);
     Service getServiceByNameAndSupplierId(String serviceName, Long supplierId);

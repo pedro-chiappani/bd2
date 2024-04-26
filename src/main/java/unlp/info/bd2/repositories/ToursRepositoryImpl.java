@@ -10,6 +10,7 @@ import unlp.info.bd2.utils.ToursException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class ToursRepositoryImpl implements ToursRepository {
@@ -100,8 +101,13 @@ public class ToursRepositoryImpl implements ToursRepository {
     }
 
     @Override
-    public void updateSupplier(Supplier supplier){
-        this.sessionFactory.getCurrentSession().persist(supplier);
+    public void updateSupplier(Supplier supplier) throws ToursException{
+        try{
+            this.sessionFactory.getCurrentSession().persist(supplier);
+        }
+        catch (ConstraintViolationException e){
+            throw new ToursException("Constraint Violation" + e.getMessage());
+        }
     }
 
     @Override
@@ -188,28 +194,31 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public List<User> getUserSpendingMoreThan(float mount){
-        List<User> users = this.sessionFactory.getCurrentSession().createQuery("SELECT u.* FROM users u JOIN purchases p ON u.id = p.user_id GROUP BY u.id HAVING SUM(p.amount) >= :mount", User.class)
+        return this.sessionFactory.getCurrentSession()
+                .createQuery("select distinct u from User u " +
+                             "join u.purchaseList p where p.totalPrice >= :mount", User.class)
                 .setParameter("mount", mount)
                 .getResultList();
-        return users;
+        // return users;
     }
 
     @Override
     public List<Supplier> getTopNSuppliersInPurchase(int n){
         return this.sessionFactory.getCurrentSession()
-                .createQuery("select s, count(p) as purchaseCount " +
-                            "from Supplier s join s.services srv join srv.itemService si join si.purchase p " +
-                            "group by s.id order by purchaseCount desc", Supplier.class)
+                .createQuery("select s " +
+                            "from Supplier s join s.services srv join srv.itemServiceList si " +
+                            "order by (select count(p) from Purchase p where p = si.purchase) desc", Supplier.class)
                 .setMaxResults(n)
-                .getResultList();
+                .getResultList()
+                ;
     }
 
     @Override
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select distinct p from Purchase p " +
-                            "join fetch p.route r join fetch r.stops " +
-                            "join fetch p.itemServices i where size(p.itemServices) > 0 " +
+                            // "join fetch p.route r join fetch r.stops " +
+                            "join fetch p.itemServiceList i where size(p.itemServiceList) > 0 " +
                             "order by p.totalPrice desc", Purchase.class)
                 .setMaxResults(10)
                 .getResultList();
@@ -217,17 +226,18 @@ public class ToursRepositoryImpl implements ToursRepository {
 
     @Override
     public List<User> getTop5UsersMorePurchases() {
-        return this.sessionFactory.getCurrentSession()
-                .createQuery("select u, count(p) as purchaseCount " +
-                            "from User u join u.purchases p group by u.id " +
-                            "order by purchaseCount desc", User.class)
+        List<User> users = this.sessionFactory.getCurrentSession()
+                .createQuery("select u from User u " +
+                            "order by (select count (p) from Purchase p where p.user = u) desc", User.class)
                 .setMaxResults(5)
                 .getResultList();
+
+        return users;
     }
 
     @Override
     public long getCountOfPurchasesBetweenDates(Date begin, Date end){
-        return (long) this.sessionFactory.getCurrentSession().createQuery("select count p From Purchase p where p.date between :start and :end", Long.class)
+        return (long) this.sessionFactory.getCurrentSession().createQuery("select count (p) From Purchase p where p.date between :start and :end", Long.class)
                 .setParameter("start", begin)
                 .setParameter("end", end)
                 .uniqueResult();
@@ -236,22 +246,23 @@ public class ToursRepositoryImpl implements ToursRepository {
     @Override
     public List<Route> getRoutesWithStop(Stop stop){
         return this.sessionFactory.getCurrentSession()
-                .createQuery("from Route where stop=:stop", Route.class)
+                .createQuery("select distinct r from Route r join r.stops s where s = :stop", Route.class)
+                .setParameter("stop", stop)
                 .getResultList();
     }
 
     @Override
     public Long getMaxStopOfRoutes() {
-        return this.sessionFactory.getCurrentSession()
+        return ((Number) this.sessionFactory.getCurrentSession()
                 .createQuery("select max(size(r.stops)) from Route r", Long.class)
-                .getSingleResult();
+                .getSingleResult()).longValue();
     }
 
     @Override
     public List<Route> getRoutesNotSell() {
         return this.sessionFactory.getCurrentSession()
-                .createQuery("select r from Route r " +
-                            "where not exist (select 1 from Purchase p where p.route = r)", Route.class)
+                .createQuery("from Route r " +
+                            "where not exists (from Purchase p where p.route = r)", Route.class)
                 .getResultList();
     }
 
@@ -259,8 +270,8 @@ public class ToursRepositoryImpl implements ToursRepository {
     public List<Route> getTop3RoutesWithMaxRating() {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select r from Route r " +
-                            "join r.purchases p join p.reviews rev " +
-                            "group by r order by avg(rev.rating) desc", Route.class)
+                            "where exists (select 1 from Purchase p where p.route = r) " +
+                            "order by (select avg(p.review.rating) from Purchase p where p.route = r) desc", Route.class)
                 .setMaxResults(3)
                 .getResultList();
 
@@ -271,7 +282,7 @@ public class ToursRepositoryImpl implements ToursRepository {
     public Service getMostDemandedService() {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select s from Service s " +
-                            "join s.itemServices iserv " +
+                            "join s.itemServiceList iserv " +
                             "group by s order by count(iserv) desc", Service.class)
                 .setMaxResults(1)
                 .uniqueResult();
@@ -281,8 +292,8 @@ public class ToursRepositoryImpl implements ToursRepository {
     @Override
     public List<Service> getServiceNoAddedToPurchases() {
         return this.sessionFactory.getCurrentSession()
-                .createQuery("select s from Service s " +
-                            "where not exist (select 1 from ItemService iserv where iserv.service = s)",
+                .createQuery("from Service s " +
+                            "where not exists (from ItemService iserv where iserv.service = s)",
                              Service.class)
                 .getResultList();
     }
@@ -292,7 +303,9 @@ public class ToursRepositoryImpl implements ToursRepository {
     public List<TourGuideUser> getTourGuidesWithRating1() {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select distinct tg from TourGuideUser tg " +
-                            "join tg.purchases p join p.reviews rev " +
+                            "join tg.routes r " +
+                            "join Purchase p on r = p.route " +
+                            "join p.review rev "+
                             "where rev.rating = 1", TourGuideUser.class)
                 .getResultList();
     }

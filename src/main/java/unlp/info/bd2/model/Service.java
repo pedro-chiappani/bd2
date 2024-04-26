@@ -12,7 +12,7 @@ public class Service {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column(name="name", unique=true, length = 30)
+    @Column(name="name", length = 30)
     private String name;
     @Column(name="price")
     private float price;

@@ -11,7 +11,7 @@ public class Stop {
     private Long id;
     @Column(name = "name", nullable = false, length = 50)
     protected String name;
-    @Column(name = "description", nullable = false, length = 150)
+    @Column(name = "description", nullable = false, length = 250)
     protected String description;
 
     public Stop(String name, String description) {
