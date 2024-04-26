@@ -8,13 +8,19 @@ public class Review {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(name = "rating")
     protected int rating;
-    @Column
+    @Column(name = "comment", length = 255)
     protected String comment;
-    @OneToOne(mappedBy = "review")
+    @OneToOne(mappedBy = "review", fetch = FetchType.EAGER)
     protected Purchase purchase;
 
+    public Review() {}
+    public Review(int rating, String comment, Purchase purchase) {
+        this.rating = rating;
+        this.comment = comment;
+        this.purchase = purchase;
+    }
 
     public Long getId() {
         return id;

@@ -1,9 +1,7 @@
 package unlp.info.bd2.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,15 +10,18 @@ import java.util.List;
 @Entity
 public class TourGuideUser extends User {
 
+    @Column(name = "education", length = 70)
     private String education;
 
-    @ManyToMany(mappedBy = "tourGuideList")
+    @ManyToMany(mappedBy = "tourGuideList", fetch = FetchType.LAZY,
+    cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Route> routes;
 
     public TourGuideUser() {}
     public TourGuideUser(String username, String password, String name, String email, Date birthdate, String phoneNumber,String education) {
         super(username, password, name, email, birthdate, phoneNumber);
         this.education = education;
+        this.routes = new ArrayList<>();
     }
 
     public String getEducation() {
@@ -38,5 +39,10 @@ public class TourGuideUser extends User {
     public void setRoutes(List<Route> routes) {
         this.routes = routes;
     }
+
+    public void addRoute(Route route) {
+        this.routes.add(route);
+    }
+
 
 }

@@ -12,26 +12,30 @@ public class Purchase {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
-    @Column(unique = true, nullable = false)
+    @Column(name = "code", unique = true, nullable = false, length = 15)
     protected String code;
-    @Column(nullable = false)
+    @Column(name = "total_price", nullable = false)
     protected float totalPrice;
-    @Column()
+    @Column(name = "date")
     protected Date date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     protected User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "route_id", referencedColumnName = "id")
     protected Route route;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.EAGER)
     @JoinColumn(name = "review_id", referencedColumnName = "id")
     protected Review review;
 
-    @OneToMany(mappedBy = "purchase")
+    @OneToMany(cascade =
+            {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.LAZY,
+            mappedBy = "purchase")
     private List<ItemService> itemServiceList;
 
     public Purchase() {}

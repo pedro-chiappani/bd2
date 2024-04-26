@@ -12,16 +12,17 @@ public class Service {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column(unique=true)
+    @Column(name="name", unique=true, length = 30)
     private String name;
-    @Column
+    @Column(name="price")
     private float price;
-    @Column
+    @Column(name = "description", length = 150)
     private String description;
 
-    @OneToMany(mappedBy = "service")
+    @OneToMany(mappedBy = "service", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<ItemService> itemServiceList;
-    @ManyToOne(cascade=CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supplier_id", referencedColumnName = "id")
     private Supplier supplier;
 
@@ -31,6 +32,7 @@ public class Service {
         this.price = price;
         this.description = description;
         this.supplier = supplier;
+        this.itemServiceList = new ArrayList<>();
 
     }
 
@@ -70,6 +72,10 @@ public class Service {
 
     public List<ItemService> getItemServiceList() {
         return itemServiceList;
+    }
+
+    public void addItemService(ItemService itemService) {
+        this.itemServiceList.add(itemService);
     }
 
     public void setItemServiceList(List<ItemService> itemServiceList) {

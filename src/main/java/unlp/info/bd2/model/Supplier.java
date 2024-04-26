@@ -12,13 +12,13 @@ public class Supplier {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
-    @Column(unique=true, nullable=false)
+    @Column(name = "bussines_name",unique=true, nullable=false, length = 40)
     private String businessName;
-    @Column(unique=true, nullable=false)
+    @Column(name = "authorization_number", unique=true, nullable=false, length = 30)
     private String authorizationNumber;
 
-    @OneToMany(cascade = CascadeType.ALL
-            , mappedBy = "supplier")
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}
+            ,fetch = FetchType.EAGER, mappedBy = "supplier")
     private List<Service> services;
 
     public Supplier(String businessName, String authorizationNumber) {

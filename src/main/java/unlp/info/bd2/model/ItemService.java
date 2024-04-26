@@ -10,10 +10,16 @@ public class ItemService {
     Long id;
     @Column
     private int quantity;
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne(cascade = {CascadeType.PERSIST,
+                        CascadeType.REFRESH
+                       }, fetch = FetchType.EAGER)
     @JoinColumn(name = "purchase_id")
     private Purchase purchase;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.REFRESH
+    }, fetch = FetchType.EAGER)
     @JoinColumn(name = "service_id")
     private Service service;
 
