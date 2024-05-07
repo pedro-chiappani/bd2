@@ -262,12 +262,14 @@ public class ToursServiceImpl implements ToursService {
     }
 
     @Override
+    @Transactional
     public List<Purchase> getAllPurchasesOfUsername(String username) {
         User user = this.toursRepository.getUserByUsername(username);
         return this.toursRepository.getAllPurchasesOfUsername(user);
     }
 
     @Override
+    @Transactional
     public List<User> getUserSpendingMoreThan(float mount) {
         List<User> usersMoreThan = this.toursRepository.getUserSpendingMoreThan(mount);
         System.out.println(usersMoreThan);
@@ -275,56 +277,67 @@ public class ToursServiceImpl implements ToursService {
     }
 
     @Override
+    @Transactional
     public List<Supplier> getTopNSuppliersInPurchases(int n) {
         return this.toursRepository.getTopNSuppliersInPurchase(n);
     }
 
     @Override
+    @Transactional
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
         return this.toursRepository.getTop10MoreExpensivePurchasesInServices();
     }
 
     @Override
+    @Transactional
     public List<User> getTop5UsersMorePurchases() {
         return this.toursRepository.getTop5UsersMorePurchases();
     }
 
     @Override
+    @Transactional
     public long getCountOfPurchasesBetweenDates(Date start, Date end) {
         return this.toursRepository.getCountOfPurchasesBetweenDates(start, end);
     }
 
     @Override
+    @Transactional
     public List<Route> getRoutesWithStop(Stop stop) {
         return this.toursRepository.getRoutesWithStop(stop);
     }
 
     @Override
+    @Transactional
     public Long getMaxStopOfRoutes() {
         return this.toursRepository.getMaxStopOfRoutes();
     }
 
     @Override
+    @Transactional
     public List<Route> getRoutsNotSell() {
         return this.toursRepository.getRoutesNotSell();
     }
 
     @Override
+    @Transactional
     public List<Route> getTop3RoutesWithMaxRating() {
         return this.toursRepository.getTop3RoutesWithMaxRating();
     }
 
     @Override
+    @Transactional
     public Service getMostDemandedService() {
         return this.toursRepository.getMostDemandedService();
     }
 
     @Override
+    @Transactional
     public List<Service> getServiceNoAddedToPurchases() {
         return this.toursRepository.getServiceNoAddedToPurchases();
     }
 
     @Override
+    @Transactional
     public List<TourGuideUser> getTourGuidesWithRating1() {
         return this.toursRepository.getTourGuidesWithRating1();
     }
