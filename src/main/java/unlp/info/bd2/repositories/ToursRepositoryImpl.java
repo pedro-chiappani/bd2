@@ -217,8 +217,7 @@ public class ToursRepositoryImpl implements ToursRepository {
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select distinct p from Purchase p " +
-                            // "join fetch p.route r join fetch r.stops " +
-                            "join fetch p.itemServiceList i where size(p.itemServiceList) > 0 " +
+                            "where size(p.itemServiceList) > 0 " +
                             "order by p.totalPrice desc", Purchase.class)
                 .setMaxResults(10)
                 .getResultList();
@@ -228,7 +227,7 @@ public class ToursRepositoryImpl implements ToursRepository {
     public List<User> getTop5UsersMorePurchases() {
         List<User> users = this.sessionFactory.getCurrentSession()
                 .createQuery("select u from User u " +
-                            "order by (select count (p) from Purchase p where p.user = u) desc", User.class)
+                            "order by size(u.purchaseList) desc", User.class)
                 .setMaxResults(5)
                 .getResultList();
 
