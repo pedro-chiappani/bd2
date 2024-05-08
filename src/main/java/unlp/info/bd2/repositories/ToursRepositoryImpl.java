@@ -22,9 +22,9 @@ public class ToursRepositoryImpl implements ToursRepository {
 
 
     @Override
-    public void createUser(Object user) throws ToursException {
+    public void create(Object object) throws ToursException {
         try{
-            sessionFactory.getCurrentSession().persist(user);
+            sessionFactory.getCurrentSession().persist(object);
         }
         catch (ConstraintViolationException e){
             throw new ToursException("Constraint Violation" + e.getMessage());
@@ -45,19 +45,15 @@ public class ToursRepositoryImpl implements ToursRepository {
     }
 
     @Override
-    public void updateUser(Object user) throws ToursException{
+    public void update(Object object) throws ToursException{
         try {
-            this.sessionFactory.getCurrentSession().persist(user);
+            this.sessionFactory.getCurrentSession().persist(object);
         }
         catch (ConstraintViolationException e){
             throw new ToursException("Constraint Violation" + e.getMessage());
         }
     }
 
-    @Override
-    public void createStop(Object stop) {
-        this.sessionFactory.getCurrentSession().persist(stop);
-    }
 
     @Override
     public List<Stop> getStopByNameStart(String stopName) {
@@ -66,10 +62,6 @@ public class ToursRepositoryImpl implements ToursRepository {
                 getResultList();
     }
 
-    @Override
-    public void createRoute(Object route) {
-        this.sessionFactory.getCurrentSession().persist(route);
-    }
 
     @Override
     public Route getRouteById(Long id) {
@@ -84,31 +76,6 @@ public class ToursRepositoryImpl implements ToursRepository {
                 getResultList();
     }
 
-    @Override
-    public void updateRoute(Route route) {
-        this.sessionFactory.getCurrentSession().persist(route);
-    }
-
-    @Override
-    public void createSupplier(Supplier supplier) throws ToursException {
-        try{
-            this.sessionFactory.getCurrentSession().persist(supplier);
-        }
-        catch (ConstraintViolationException e){
-            throw new ToursException("Constraint Violation" + e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void updateSupplier(Supplier supplier) throws ToursException{
-        try{
-            this.sessionFactory.getCurrentSession().persist(supplier);
-        }
-        catch (ConstraintViolationException e){
-            throw new ToursException("Constraint Violation" + e.getMessage());
-        }
-    }
 
     @Override
     public Supplier getSupplierById(Long id){
@@ -137,15 +104,6 @@ public class ToursRepositoryImpl implements ToursRepository {
         return this.sessionFactory.getCurrentSession().get(Service.class, id);
     }
 
-    @Override
-    public void updateService(Service service) {
-        this.sessionFactory.getCurrentSession().persist(service);
-    }
-
-    @Override
-    public void updatePurchase(Purchase purchase) {
-        this.sessionFactory.getCurrentSession().persist(purchase);
-    }
 
     @Override
     public Purchase getPurchaseByCode(String code) {
@@ -164,14 +122,8 @@ public class ToursRepositoryImpl implements ToursRepository {
 
 
     @Override
-    public void deletePurchase(Purchase purchase) {
-        this.sessionFactory.getCurrentSession().remove(purchase);
-    }
-
-
-    @Override
-    public void removeUser(User user) {
-        this.sessionFactory.getCurrentSession().remove(user);
+    public void remove(Object object) {
+        this.sessionFactory.getCurrentSession().remove(object);
     }
 
 
@@ -217,8 +169,7 @@ public class ToursRepositoryImpl implements ToursRepository {
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select distinct p from Purchase p " +
-                            // "join fetch p.route r join fetch r.stops " +
-                            "join fetch p.itemServiceList i where size(p.itemServiceList) > 0 " +
+                            "where size(p.itemServiceList) > 0 " +
                             "order by p.totalPrice desc", Purchase.class)
                 .setMaxResults(10)
                 .getResultList();
@@ -228,7 +179,7 @@ public class ToursRepositoryImpl implements ToursRepository {
     public List<User> getTop5UsersMorePurchases() {
         List<User> users = this.sessionFactory.getCurrentSession()
                 .createQuery("select u from User u " +
-                            "order by (select count (p) from Purchase p where p.user = u) desc", User.class)
+                            "order by size(u.purchaseList) desc", User.class)
                 .setMaxResults(5)
                 .getResultList();
 

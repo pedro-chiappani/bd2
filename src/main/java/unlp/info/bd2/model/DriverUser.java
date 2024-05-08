@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue("DRIVER")
 public class DriverUser extends User {
 
     @Column(name = "expedient", length = 50)

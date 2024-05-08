@@ -13,24 +13,24 @@ public class Purchase {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     Long id;
     @Column(name = "code", unique = true, nullable = false, length = 15)
-    protected String code;
+    private String code;
     @Column(name = "total_price", nullable = false)
-    protected float totalPrice;
+    private float totalPrice;
     @Column(name = "date")
-    protected Date date;
+    private Date date;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    protected User user;
+    private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "route_id", referencedColumnName = "id")
-    protected Route route;
+    private Route route;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
             fetch = FetchType.EAGER)
     @JoinColumn(name = "review_id", referencedColumnName = "id")
-    protected Review review;
+    private Review review;
 
     @OneToMany(cascade =
             {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
