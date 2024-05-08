@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.utils.ToursException;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
