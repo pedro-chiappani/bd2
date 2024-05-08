@@ -14,33 +14,33 @@ public class Route {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column
-    protected String name;
+    private String name;
     @Column
-    protected float price;
+    private float price;
     @Column
-    protected float totalKm;
+    private float totalKm;
     @Column
-    protected int maxNumberUsers;
+    private int maxNumberUsers;
 
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name = "routes_stops",
     joinColumns = @JoinColumn(name = "route_id"),
     inverseJoinColumns = @JoinColumn(name = "stop_id")
     )
-    protected List<Stop> stops;
+    private List<Stop> stops;
 
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name = "routes_drivers",
             joinColumns = @JoinColumn(name = "route_id"),
             inverseJoinColumns = @JoinColumn(name = "driver_id")
     )
-    protected List<DriverUser> driverList;
+    private List<DriverUser> driverList;
     @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinTable(name = "routes_guides",
             joinColumns = @JoinColumn(name = "route_id"),
             inverseJoinColumns = @JoinColumn(name = "guide_id")
     )
-    protected List<TourGuideUser> tourGuideList;
+    private List<TourGuideUser> tourGuideList;
 
     public Route(String name, float price, float totalKm, int maxNumberUsers, List<Stop> stops){
         this.name = name;

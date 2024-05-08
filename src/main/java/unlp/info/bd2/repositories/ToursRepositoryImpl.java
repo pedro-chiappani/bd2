@@ -7,9 +7,7 @@ import org.springframework.stereotype.Repository;
 import unlp.info.bd2.model.*;
 import unlp.info.bd2.utils.ToursException;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ToursRepositoryImpl implements ToursRepository {
@@ -21,9 +19,9 @@ public class ToursRepositoryImpl implements ToursRepository {
 
 
     @Override
-    public void createUser(Object user) throws ToursException {
+    public void create(Object object) throws ToursException {
         try{
-            sessionFactory.getCurrentSession().persist(user);
+            sessionFactory.getCurrentSession().persist(object);
         }
         catch (ConstraintViolationException e){
             throw new ToursException("Constraint Violation" + e.getMessage());
@@ -44,19 +42,15 @@ public class ToursRepositoryImpl implements ToursRepository {
     }
 
     @Override
-    public void updateUser(Object user) throws ToursException{
+    public void update(Object object) throws ToursException{
         try {
-            this.sessionFactory.getCurrentSession().persist(user);
+            this.sessionFactory.getCurrentSession().persist(object);
         }
         catch (ConstraintViolationException e){
             throw new ToursException("Constraint Violation" + e.getMessage());
         }
     }
 
-    @Override
-    public void createStop(Object stop) {
-        this.sessionFactory.getCurrentSession().persist(stop);
-    }
 
     @Override
     public List<Stop> getStopByNameStart(String stopName) {
@@ -65,10 +59,6 @@ public class ToursRepositoryImpl implements ToursRepository {
                 getResultList();
     }
 
-    @Override
-    public void createRoute(Object route) {
-        this.sessionFactory.getCurrentSession().persist(route);
-    }
 
     @Override
     public Route getRouteById(Long id) {
@@ -83,26 +73,6 @@ public class ToursRepositoryImpl implements ToursRepository {
                 getResultList();
     }
 
-    @Override
-    public void updateRoute(Route route) {
-        this.sessionFactory.getCurrentSession().persist(route);
-    }
-
-    @Override
-    public void createSupplier(Supplier supplier) throws ToursException {
-        try{
-            this.sessionFactory.getCurrentSession().persist(supplier);
-        }
-        catch (ConstraintViolationException e){
-            throw new ToursException("Constraint Violation" + e.getMessage());
-        }
-
-    }
-
-    @Override
-    public void updateSupplier(Supplier supplier){
-        this.sessionFactory.getCurrentSession().persist(supplier);
-    }
 
     @Override
     public Supplier getSupplierById(Long id){
@@ -131,15 +101,6 @@ public class ToursRepositoryImpl implements ToursRepository {
         return this.sessionFactory.getCurrentSession().get(Service.class, id);
     }
 
-    @Override
-    public void updateService(Service service) {
-        this.sessionFactory.getCurrentSession().persist(service);
-    }
-
-    @Override
-    public void updatePurchase(Purchase purchase) {
-        this.sessionFactory.getCurrentSession().persist(purchase);
-    }
 
     @Override
     public Purchase getPurchaseByCode(String code) {
@@ -158,14 +119,8 @@ public class ToursRepositoryImpl implements ToursRepository {
 
 
     @Override
-    public void deletePurchase(Purchase purchase) {
-        this.sessionFactory.getCurrentSession().remove(purchase);
-    }
-
-
-    @Override
-    public void removeUser(User user) {
-        this.sessionFactory.getCurrentSession().remove(user);
+    public void remove(Object object) {
+        this.sessionFactory.getCurrentSession().remove(object);
     }
 
 

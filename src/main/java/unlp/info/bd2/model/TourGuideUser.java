@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue("TOURGUIDE")
 public class TourGuideUser extends User {
 
     @Column(name = "education", length = 70)

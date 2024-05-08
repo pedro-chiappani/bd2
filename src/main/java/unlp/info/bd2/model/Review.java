@@ -9,11 +9,11 @@ public class Review {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
     @Column(name = "rating")
-    protected int rating;
+    private int rating;
     @Column(name = "comment", length = 255)
-    protected String comment;
+    private String comment;
     @OneToOne(mappedBy = "review", fetch = FetchType.EAGER)
-    protected Purchase purchase;
+    private Purchase purchase;
 
     public Review() {}
     public Review(int rating, String comment, Purchase purchase) {
