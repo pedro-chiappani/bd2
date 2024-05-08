@@ -8,11 +8,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-//@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "tipo_usuario")
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(name = "username",unique = true, nullable = false, updatable = false, length = 30)
     protected String username;
