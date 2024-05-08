@@ -24,4 +24,18 @@ public interface ToursRepository {
 
 }
 
+    List<Purchase> getAllPurchasesOfUsername(User user);
+    List<User> getUserSpendingMoreThan(float mount);
+    List<Supplier> getTopNSuppliersInPurchase(int cant);
+    List<Purchase> getTop10MoreExpensivePurchasesInServices();
+    List<User> getTop5UsersMorePurchases();
+    long getCountOfPurchasesBetweenDates(Date fecha1, Date fecha2);
+    List<Route> getRoutesWithStop(Stop stop);
+    Long getMaxStopOfRoutes();
+    List<Route> getRoutesNotSell();
+    List<Route> getTop3RoutesWithMaxRating();
+    Service getMostDemandedService();
+    List<Service> getServiceNoAddedToPurchases();
+    List<TourGuideUser> getTourGuidesWithRating1();
 
+}

@@ -262,81 +262,84 @@ public class ToursServiceImpl implements ToursService {
     }
 
     @Override
+    @Transactional
     public List<Purchase> getAllPurchasesOfUsername(String username) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPurchasesOfUsername'");
+        User user = this.toursRepository.getUserByUsername(username);
+        return this.toursRepository.getAllPurchasesOfUsername(user);
     }
 
     @Override
+    @Transactional
     public List<User> getUserSpendingMoreThan(float mount) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUserSpendingMoreThan'");
+        List<User> usersMoreThan = this.toursRepository.getUserSpendingMoreThan(mount);
+        System.out.println(usersMoreThan);
+        return usersMoreThan;
     }
 
     @Override
+    @Transactional
     public List<Supplier> getTopNSuppliersInPurchases(int n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTopNSuppliersInPurchases'");
+        return this.toursRepository.getTopNSuppliersInPurchase(n);
     }
 
     @Override
+    @Transactional
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop10MoreExpensivePurchasesInServices'");
+        return this.toursRepository.getTop10MoreExpensivePurchasesInServices();
     }
 
     @Override
+    @Transactional
     public List<User> getTop5UsersMorePurchases() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop5UsersMorePurchases'");
+        return this.toursRepository.getTop5UsersMorePurchases();
     }
 
     @Override
+    @Transactional
     public long getCountOfPurchasesBetweenDates(Date start, Date end) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCountOfPurchasesBetweenDates'");
+        return this.toursRepository.getCountOfPurchasesBetweenDates(start, end);
     }
 
     @Override
+    @Transactional
     public List<Route> getRoutesWithStop(Stop stop) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutesWithStop'");
+        return this.toursRepository.getRoutesWithStop(stop);
     }
 
     @Override
+    @Transactional
     public Long getMaxStopOfRoutes() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaxStopOfRoutes'");
+        return this.toursRepository.getMaxStopOfRoutes();
     }
 
     @Override
+    @Transactional
     public List<Route> getRoutsNotSell() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutsNotSell'");
+        return this.toursRepository.getRoutesNotSell();
     }
 
     @Override
+    @Transactional
     public List<Route> getTop3RoutesWithMaxRating() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop3RoutesWithMaxRating'");
+        return this.toursRepository.getTop3RoutesWithMaxRating();
     }
 
     @Override
+    @Transactional
     public Service getMostDemandedService() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMostDemandedService'");
+        return this.toursRepository.getMostDemandedService();
     }
 
     @Override
+    @Transactional
     public List<Service> getServiceNoAddedToPurchases() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getServiceNoAddedToPurchases'");
+        return this.toursRepository.getServiceNoAddedToPurchases();
     }
 
     @Override
+    @Transactional
     public List<TourGuideUser> getTourGuidesWithRating1() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTourGuidesWithRating1'");
+        return this.toursRepository.getTourGuidesWithRating1();
     }
 
 }
