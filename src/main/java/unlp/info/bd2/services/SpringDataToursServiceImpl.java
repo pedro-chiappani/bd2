@@ -323,9 +323,19 @@ public class SpringDataToursServiceImpl implements ToursService{
     }
 
     @Override
+    @Transactional
     public Review addReviewToPurchase(int rating, String comment, Purchase purchase) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addReviewToPurchase'");
+        Review review = new Review(rating, comment, purchase);
+        purchase.setReview(review);
+        try{
+            purchaseRepository.save(purchase);
+            return purchase.getReview();//review;
+        }catch (ConstraintViolationException e){
+            throw new ToursException("Constraint Violation" + e.getMessage());
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
+
     }
 
     @Override
