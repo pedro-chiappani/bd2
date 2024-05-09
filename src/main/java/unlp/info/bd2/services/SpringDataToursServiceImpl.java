@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import unlp.info.bd2.model.DriverUser;
 import unlp.info.bd2.model.ItemService;
 import unlp.info.bd2.model.Purchase;
@@ -14,41 +15,60 @@ import unlp.info.bd2.model.Stop;
 import unlp.info.bd2.model.Supplier;
 import unlp.info.bd2.model.TourGuideUser;
 import unlp.info.bd2.model.User;
+import unlp.info.bd2.repositories.DriverUserRepository;
+import unlp.info.bd2.repositories.TourGuideUserRepository;
+import unlp.info.bd2.repositories.UserRepository;
 import unlp.info.bd2.utils.ToursException;
 
 public class SpringDataToursServiceImpl implements ToursService{
 
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    DriverUserRepository driverUserRepository;
+    @Autowired
+    TourGuideUserRepository tourGuideUserRepository;
+
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate,
             String phoneNumber) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createUser'");
+        try{
+            return userRepository.save(new User(username, password, fullName, email, birthdate, phoneNumber));
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public DriverUser createDriverUser(String username, String password, String fullName, String email, Date birthdate,
             String phoneNumber, String expedient) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createDriverUser'");
+        try{
+            return driverUserRepository.save(new DriverUser(username, password, fullName, email, birthdate, phoneNumber, expedient));
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public TourGuideUser createTourGuideUser(String username, String password, String fullName, String email,
             Date birthdate, String phoneNumber, String education) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createTourGuideUser'");
+        try{
+            return tourGuideUserRepository.save(new TourGuideUser(username, password, fullName, email, birthdate, phoneNumber, education));
+        }
+        catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public Optional<User> getUserById(Long id) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUserById'");
+        return userRepository.findById(id);
     }
 
     @Override
     public Optional<User> getUserByUsername(String username) throws ToursException {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUserByUsername'");
+        return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
     @Override
