@@ -34,6 +34,8 @@ public class SpringDataToursServiceImpl implements ToursService{
     SupplierRepository supplierRepository;
     @Autowired
     ServiceRepository serviceRepository;
+    @Autowired
+    PurchaseRepository purchaseRepository;
 
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate,
@@ -135,7 +137,12 @@ public class SpringDataToursServiceImpl implements ToursService{
         Route route = optionalRoute.get();
         route.addDriver(driverUser);
         driverUser.addRoute(route);
-        routeRepository.save(route);
+        try{
+            routeRepository.save(route);
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
+
 
     }
 
@@ -149,7 +156,11 @@ public class SpringDataToursServiceImpl implements ToursService{
         Route route = optionalRoute.get();
         route.addTourGuide(tourGuideUser);
         tourGuideUser.addRoute(route);
-        routeRepository.save(route);
+        try{
+            routeRepository.save(route);
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
@@ -166,9 +177,13 @@ public class SpringDataToursServiceImpl implements ToursService{
             throws ToursException {
         Service service = new Service(name, price, description, supplier);
         supplier.addService(service);
-        serviceRepository.save(service);
-        supplierRepository.save(supplier);
-        return service;
+        try{
+            supplierRepository.save(supplier);
+            return supplier.getServices().get(supplier.getServices().size()-1);
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
+
     }
 
     @Override
@@ -178,8 +193,12 @@ public class SpringDataToursServiceImpl implements ToursService{
         }
         Service service = serviceRepository.findById(id).get();
         service.setPrice(newPrice);
-        serviceRepository.save(service);
-        return service;
+        try{
+            serviceRepository.save(service);
+            return service;
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
@@ -204,26 +223,52 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public Purchase createPurchase(String code, Route route, User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createPurchase'");
+        if(route.getMaxNumberUsers() <= purchaseRepository.countByRoute(route)){
+            throw new ToursException("No puede realizarse la compra");
+        }
+        Purchase purchase = new Purchase(code, user, route);
+        user.addPurchase(purchase);
+        try{
+            userRepository.save(user);
+            return purchase;
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
+
     }
 
     @Override
     public Purchase createPurchase(String code, Date date, Route route, User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createPurchase'");
+        if(route.getMaxNumberUsers() <= purchaseRepository.countByRoute(route)){
+            throw new ToursException("No puede realizarse la compra");
+        }
+        Purchase purchase = new Purchase(code, date, user, route);
+        user.addPurchase(purchase);
+        try{
+            userRepository.save(user);
+            return user.getPurchaseList().get(user.getPurchaseList().size()-1);
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public ItemService addItemToPurchase(Service service, int quantity, Purchase purchase) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addItemToPurchase'");
+        ItemService itemService = new ItemService(quantity, purchase, service);
+        purchase.addItemService(itemService);
+        service.addItemService(itemService);
+        try{
+            purchaseRepository.save(purchase);
+            return purchase.getItemServiceList().get(purchase.getItemServiceList().size()-1);
+        }
+        catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public Optional<Purchase> getPurchaseByCode(String code) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPurchaseByCode'");
+        return Optional.ofNullable(purchaseRepository.findByCode(code));
     }
 
     @Override
