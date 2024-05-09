@@ -226,7 +226,7 @@ public class SpringDataToursServiceImpl implements ToursService{
         supplier.addService(service);
 
         supplierRepository.save(supplier);
-        return supplier.getServices().get(supplier.getServices().size()-1); //service
+        return supplier.getServices().get(supplier.getServices().size()-1); //service;//
 
     }
 
