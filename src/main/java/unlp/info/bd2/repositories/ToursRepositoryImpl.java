@@ -157,9 +157,10 @@ public class ToursRepositoryImpl implements ToursRepository {
     @Override
     public List<Supplier> getTopNSuppliersInPurchase(int n){
         return this.sessionFactory.getCurrentSession()
-                .createQuery("select s " +
-                            "from Supplier s join s.services srv join srv.itemServiceList si " +
-                            "order by (select count(p) from Purchase p where p = si.purchase) desc", Supplier.class)
+                .createQuery("select s from Supplier s " +
+                            "join s.services srv join srv.itemServiceList si " +
+                            "join si.purchase p group by s " +
+                            "order by count(p) desc", Supplier.class)
                 .setMaxResults(n)
                 .getResultList()
                 ;
