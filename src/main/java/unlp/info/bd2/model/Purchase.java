@@ -34,7 +34,7 @@ public class Purchase {
 
     @OneToMany(cascade =
             {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
-            fetch = FetchType.LAZY,
+            fetch = FetchType.EAGER,
             mappedBy = "purchase")
     private List<ItemService> itemServiceList;
 

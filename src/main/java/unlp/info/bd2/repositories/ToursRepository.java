@@ -10,7 +10,7 @@ public interface ToursRepository {
 
     void create(Object object) throws ToursException;
     void update(Object object) throws ToursException;
-    void remove(Object object);
+    void remove(Object object) throws ToursException ;
     User getUserById(Long id);
     User getUserByUsername(String username);
     List<Stop> getStopByNameStart(String stopName);

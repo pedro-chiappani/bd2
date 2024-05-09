@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "tipo_usuario")
+@DiscriminatorValue("USER")
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
