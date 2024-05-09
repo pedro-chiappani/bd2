@@ -15,9 +15,7 @@ import unlp.info.bd2.model.Stop;
 import unlp.info.bd2.model.Supplier;
 import unlp.info.bd2.model.TourGuideUser;
 import unlp.info.bd2.model.User;
-import unlp.info.bd2.repositories.DriverUserRepository;
-import unlp.info.bd2.repositories.TourGuideUserRepository;
-import unlp.info.bd2.repositories.UserRepository;
+import unlp.info.bd2.repositories.*;
 import unlp.info.bd2.utils.ToursException;
 
 public class SpringDataToursServiceImpl implements ToursService{
@@ -28,6 +26,10 @@ public class SpringDataToursServiceImpl implements ToursService{
     DriverUserRepository driverUserRepository;
     @Autowired
     TourGuideUserRepository tourGuideUserRepository;
+    @Autowired
+    StopRepository stopRepository;
+    @Autowired
+    RouteRepository routeRepository;
 
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate,
@@ -87,33 +89,36 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public Stop createStop(String name, String description) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createStop'");
+        try{
+            return stopRepository.save(new Stop(name, description));
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public List<Stop> getStopByNameStart(String name) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getStopByNameStart'");
+        return stopRepository.findByNameStartingWith(name);
     }
 
     @Override
     public Route createRoute(String name, float price, float totalKm, int maxNumberOfUsers, List<Stop> stops)
             throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createRoute'");
+        try{
+            return routeRepository.save(new Route(name, price, totalKm, maxNumberOfUsers, stops));
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public Optional<Route> getRouteById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRouteById'");
+        return routeRepository.findById(id);
     }
 
     @Override
     public List<Route> getRoutesBelowPrice(float price) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutesBelowPrice'");
+        return routeRepository.findByPriceLessThan(price);
     }
 
     @Override
