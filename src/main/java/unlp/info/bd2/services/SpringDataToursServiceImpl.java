@@ -67,14 +67,16 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public Optional<User> getUserByUsername(String username) throws ToursException {
-        // TODO Auto-generated method stub
         return Optional.ofNullable(userRepository.findByUsername(username));
     }
 
     @Override
     public User updateUser(User user) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateUser'");
+        if(userRepository.existsById(user.getId())){
+            return userRepository.save(user);
+        }else {
+            throw new ToursException("El usuario no existe");
+        }
     }
 
     @Override
