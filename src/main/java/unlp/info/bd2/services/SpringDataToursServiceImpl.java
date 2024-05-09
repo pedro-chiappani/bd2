@@ -123,14 +123,29 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public void assignDriverByUsername(String username, Long idRoute) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'assignDriverByUsername'");
+        Optional<Route> optionalRoute = routeRepository.findById(idRoute);
+        DriverUser driverUser = driverUserRepository.findByUsername(username);
+        if(optionalRoute.isEmpty() || driverUser == null){
+            throw new ToursException("No pudo realizarse la asignación");
+        }
+        Route route = optionalRoute.get();
+        route.addDriver(driverUser);
+        driverUser.addRoute(route);
+        routeRepository.save(route);
+
     }
 
     @Override
     public void assignTourGuideByUsername(String username, Long idRoute) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'assignTourGuideByUsername'");
+        Optional<Route> optionalRoute = routeRepository.findById(idRoute);
+        TourGuideUser tourGuideUser = tourGuideUserRepository.findByUsername(username);
+        if(optionalRoute.isEmpty() || tourGuideUser == null){
+            throw new ToursException("No pudo realizarse la asignación");
+        }
+        Route route = optionalRoute.get();
+        route.addTourGuide(tourGuideUser);
+        tourGuideUser.addRoute(route);
+        routeRepository.save(route);
     }
 
     @Override
