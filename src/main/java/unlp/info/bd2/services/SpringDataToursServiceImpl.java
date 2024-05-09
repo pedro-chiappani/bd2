@@ -4,6 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
 import unlp.info.bd2.model.DriverUser;
 import unlp.info.bd2.model.ItemService;
 import unlp.info.bd2.model.Purchase;
@@ -14,9 +18,40 @@ import unlp.info.bd2.model.Stop;
 import unlp.info.bd2.model.Supplier;
 import unlp.info.bd2.model.TourGuideUser;
 import unlp.info.bd2.model.User;
+import unlp.info.bd2.repositories.DriverUserRepository;
+import unlp.info.bd2.repositories.ItemServiceRepository;
+import unlp.info.bd2.repositories.PurchaseRepository;
+import unlp.info.bd2.repositories.ReviewRepository;
+import unlp.info.bd2.repositories.RouteRepository;
+import unlp.info.bd2.repositories.ServiceRepository;
+import unlp.info.bd2.repositories.StopRepository;
+import unlp.info.bd2.repositories.SupplierRepository;
+import unlp.info.bd2.repositories.TourGuideUserRepository;
+import unlp.info.bd2.repositories.UserRepository;
 import unlp.info.bd2.utils.ToursException;
 
 public class SpringDataToursServiceImpl implements ToursService{
+
+    @Autowired
+    DriverUserRepository driverUserRepository;
+    @Autowired
+    ItemServiceRepository itemServiceRepository;
+    @Autowired
+    PurchaseRepository purchaseRepository;
+    @Autowired
+    ReviewRepository reviewRepository;
+    @Autowired
+    RouteRepository routeRepository;
+    @Autowired
+    ServiceRepository serviceRepository;
+    @Autowired
+    StopRepository stopRepository;
+    @Autowired
+    SupplierRepository supplierRepository;
+    @Autowired
+    TourGuideUserRepository tourGuideUserRepository;
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate,
@@ -181,80 +216,71 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public List<Purchase> getAllPurchasesOfUsername(String username) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllPurchasesOfUsername'");
+        return this.purchaseRepository.getAllPurchasesOfUsername(username);
     }
 
     @Override
     public List<User> getUserSpendingMoreThan(float mount) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUserSpendingMoreThan'");
+        return this.userRepository.getUserSpendingMoreThan(mount);
     }
 
     @Override
     public List<Supplier> getTopNSuppliersInPurchases(int n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTopNSuppliersInPurchases'");
+        Pageable topN = PageRequest.of(0,n);
+        return this.supplierRepository.getTopNSuppliersInPurchases(topN);
     }
 
     @Override
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop10MoreExpensivePurchasesInServices'");
+        Pageable top10 = PageRequest.of(0,10);
+        return this.purchaseRepository.getTop10MoreExpensivePurchasesInService(top10);
     }
 
     @Override
     public List<User> getTop5UsersMorePurchases() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop5UsersMorePurchases'");
+        Pageable top5 = PageRequest.of(0,5);
+        return this.userRepository.getTop5UsersMorePurchases(top5);
     }
 
     @Override
     public long getCountOfPurchasesBetweenDates(Date start, Date end) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCountOfPurchasesBetweenDates'");
+        return this.purchaseRepository.getCountOfPurchasesBetweenDates(start, end);
     }
 
     @Override
     public List<Route> getRoutesWithStop(Stop stop) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutesWithStop'");
+        return this.routeRepository.getRoutesWithStop(stop);
     }
 
     @Override
     public Long getMaxStopOfRoutes() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMaxStopOfRoutes'");
+        return this.routeRepository.getMaxStopOfRoutes();
     }
 
     @Override
     public List<Route> getRoutsNotSell() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getRoutsNotSell'");
+        return this.routeRepository.getRoutesNotSell();
     }
 
     @Override
     public List<Route> getTop3RoutesWithMaxRating() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTop3RoutesWithMaxRating'");
+        Pageable top3 = PageRequest.of(0,3);
+        return this.routeRepository.getTop3RoutesWithMaxRating(top3);
     }
 
     @Override
     public Service getMostDemandedService() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getMostDemandedService'");
+        return this.serviceRepository.getMostDemandedService();
     }
 
     @Override
     public List<Service> getServiceNoAddedToPurchases() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getServiceNoAddedToPurchases'");
+        return this.serviceRepository.getServiceNoAddedToPurchases();
     }
 
     @Override
     public List<TourGuideUser> getTourGuidesWithRating1() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getTourGuidesWithRating1'");
+        return this.tourGuideUserRepository.getTourGuidesWithRating1();
     }
 
 }
