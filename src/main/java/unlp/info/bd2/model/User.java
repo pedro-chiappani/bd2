@@ -33,7 +33,7 @@ public class User {
 
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+            cascade = {CascadeType.MERGE})
     protected List<Purchase> purchaseList;
 
     public User() {}
