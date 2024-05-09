@@ -166,14 +166,20 @@ public class SpringDataToursServiceImpl implements ToursService{
             throws ToursException {
         Service service = new Service(name, price, description, supplier);
         supplier.addService(service);
+        serviceRepository.save(service);
         supplierRepository.save(supplier);
         return service;
     }
 
     @Override
     public Service updateServicePriceById(Long id, float newPrice) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateServicePriceById'");
+        if(!serviceRepository.existsById(id)){
+            throw new ToursException("No existe el producto");
+        }
+        Service service = serviceRepository.findById(id).get();
+        service.setPrice(newPrice);
+        serviceRepository.save(service);
+        return service;
     }
 
     @Override
