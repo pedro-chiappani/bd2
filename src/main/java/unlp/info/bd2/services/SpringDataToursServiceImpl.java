@@ -30,6 +30,10 @@ public class SpringDataToursServiceImpl implements ToursService{
     StopRepository stopRepository;
     @Autowired
     RouteRepository routeRepository;
+    @Autowired
+    SupplierRepository supplierRepository;
+    @Autowired
+    ServiceRepository serviceRepository;
 
     @Override
     public User createUser(String username, String password, String fullName, String email, Date birthdate,
@@ -150,15 +154,20 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public Supplier createSupplier(String businessName, String authorizationNumber) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createSupplier'");
+        try{
+            return supplierRepository.save(new Supplier(businessName, authorizationNumber));
+        }catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
 
     @Override
     public Service addServiceToSupplier(String name, float price, String description, Supplier supplier)
             throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addServiceToSupplier'");
+        Service service = new Service(name, price, description, supplier);
+        supplier.addService(service);
+        supplierRepository.save(supplier);
+        return service;
     }
 
     @Override
@@ -169,20 +178,22 @@ public class SpringDataToursServiceImpl implements ToursService{
 
     @Override
     public Optional<Supplier> getSupplierById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSupplierById'");
+        return supplierRepository.findById(id);
     }
 
     @Override
     public Optional<Supplier> getSupplierByAuthorizationNumber(String authorizationNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getSupplierByAuthorizationNumber'");
+        return Optional.ofNullable(supplierRepository.findByAuthorizationNumber(authorizationNumber));
     }
 
     @Override
     public Optional<Service> getServiceByNameAndSupplierId(String name, Long id) throws ToursException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getServiceByNameAndSupplierId'");
+        Optional<Supplier> supplierOptional = supplierRepository.findById(id);
+        if(supplierOptional.isEmpty()){
+            throw new ToursException("El proveedor no existe");
+        }
+        Supplier supplier = supplierOptional.get();
+        return Optional.ofNullable(serviceRepository.findByNameAndSupplier(name, supplier));
     }
 
     @Override
