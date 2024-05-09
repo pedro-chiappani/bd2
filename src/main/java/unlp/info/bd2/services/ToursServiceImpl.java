@@ -121,36 +121,30 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public void assignDriverByUsername(String username, Long idRoute) throws ToursException {
-        try {
-            Route route = this.toursRepository.getRouteById(idRoute);
-            DriverUser driverUser = (DriverUser) this.toursRepository.getUserByUsername(username);
-            route.addDriver(driverUser);
-            this.toursRepository.update(route);
-        }
-        catch (NullPointerException e){
+
+        Route route = this.toursRepository.getRouteById(idRoute);
+        DriverUser driverUser = (DriverUser) this.toursRepository.getUserByUsername(username);
+        if (route == null || driverUser == null){
             throw new ToursException("No pudo realizarse la asignación");
         }
-        catch (Exception e) {
-            throw new ToursException(e.getMessage());
-        }
+        route.addDriver(driverUser);
+        driverUser.addRoute(route);
+        this.toursRepository.update(route);
     }
 
     @Override
     @Transactional
     public void assignTourGuideByUsername(String username, Long idRoute) throws ToursException {
-        try{
-            Route route = this.toursRepository.getRouteById(idRoute);
-            TourGuideUser tourGuideUser = (TourGuideUser) this.toursRepository.getUserByUsername(username);
-            route.addTourGuide(tourGuideUser);
-            tourGuideUser.addRoute(route);
-            this.toursRepository.update(route);
-        }
-        catch (NullPointerException e){
+        Route route = this.toursRepository.getRouteById(idRoute);
+        TourGuideUser tourGuideUser = (TourGuideUser) this.toursRepository.getUserByUsername(username);
+        if (route == null || tourGuideUser == null){
             throw new ToursException("No pudo realizarse la asignación");
         }
-        catch (Exception e) {
-            throw new ToursException(e.getMessage());
-        }
+
+        route.addTourGuide(tourGuideUser);
+        tourGuideUser.addRoute(route);
+        this.toursRepository.update(route);
+
     }
 
     @Override
@@ -174,18 +168,14 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public Service updateServicePriceById(Long id, float newPrice) throws ToursException {
-        try{
-            Service service = this.toursRepository.getServiceById(id);
-            service.setPrice(newPrice);
-            this.toursRepository.update(service);
-            return service;
-        }
-        catch (NullPointerException e){
+        Service service = this.toursRepository.getServiceById(id);
+        if (service == null){
             throw new ToursException("No existe el producto");
         }
-        catch (Exception e) {
-            throw new ToursException(e.getMessage());
-        }
+        service.setPrice(newPrice);
+        this.toursRepository.update(service);
+        return service;
+
     }
 
     @Override
@@ -262,14 +252,14 @@ public class ToursServiceImpl implements ToursService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Purchase> getAllPurchasesOfUsername(String username) {
         User user = this.toursRepository.getUserByUsername(username);
         return this.toursRepository.getAllPurchasesOfUsername(user);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> getUserSpendingMoreThan(float mount) {
         List<User> usersMoreThan = this.toursRepository.getUserSpendingMoreThan(mount);
         System.out.println(usersMoreThan);
@@ -277,67 +267,67 @@ public class ToursServiceImpl implements ToursService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Supplier> getTopNSuppliersInPurchases(int n) {
         return this.toursRepository.getTopNSuppliersInPurchase(n);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
         return this.toursRepository.getTop10MoreExpensivePurchasesInServices();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> getTop5UsersMorePurchases() {
         return this.toursRepository.getTop5UsersMorePurchases();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public long getCountOfPurchasesBetweenDates(Date start, Date end) {
         return this.toursRepository.getCountOfPurchasesBetweenDates(start, end);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Route> getRoutesWithStop(Stop stop) {
         return this.toursRepository.getRoutesWithStop(stop);
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Long getMaxStopOfRoutes() {
         return this.toursRepository.getMaxStopOfRoutes();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Route> getRoutsNotSell() {
         return this.toursRepository.getRoutesNotSell();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Route> getTop3RoutesWithMaxRating() {
         return this.toursRepository.getTop3RoutesWithMaxRating();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Service getMostDemandedService() {
         return this.toursRepository.getMostDemandedService();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Service> getServiceNoAddedToPurchases() {
         return this.toursRepository.getServiceNoAddedToPurchases();
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TourGuideUser> getTourGuidesWithRating1() {
         return this.toursRepository.getTourGuidesWithRating1();
     }

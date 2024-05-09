@@ -29,6 +29,9 @@ public class ToursRepositoryImpl implements ToursRepository {
         catch (ConstraintViolationException e){
             throw new ToursException("Constraint Violation" + e.getMessage());
         }
+        catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
 
     }
 
@@ -51,6 +54,9 @@ public class ToursRepositoryImpl implements ToursRepository {
         }
         catch (ConstraintViolationException e){
             throw new ToursException("Constraint Violation" + e.getMessage());
+        }
+        catch (Exception e){
+            throw new ToursException(e.getMessage());
         }
     }
 
@@ -122,9 +128,18 @@ public class ToursRepositoryImpl implements ToursRepository {
 
 
     @Override
-    public void remove(Object object) {
-        this.sessionFactory.getCurrentSession().remove(object);
+    public void remove(Object object) throws ToursException {
+        try{
+            this.sessionFactory.getCurrentSession().remove(object);
+        }
+        catch (ConstraintViolationException e){
+            throw new ToursException("Constraint Violation" + e.getMessage());
+        }
+        catch (Exception e){
+            throw new ToursException(e.getMessage());
+        }
     }
+
 
 
     public Purchase getPurchaseByUserAndDate(User user, Date date, Route route) {
@@ -235,7 +250,7 @@ public class ToursRepositoryImpl implements ToursRepository {
         return this.sessionFactory.getCurrentSession()
                 .createQuery("select s from Service s " +
                             "join s.itemServiceList iserv " +
-                            "group by s order by count(iserv) desc", Service.class)
+                            "group by s order by sum(iserv.quantity) desc", Service.class)
                 .setMaxResults(1)
                 .uniqueResult();
     }
