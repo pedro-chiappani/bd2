@@ -10,7 +10,11 @@ import org.springframework.data.repository.query.Param;
 import unlp.info.bd2.model.Route;
 import unlp.info.bd2.model.Stop;
 
+import java.util.List;
+
+
 public interface RouteRepository extends CrudRepository<Route, Long>{
+    List<Route> findByPriceLessThan(float price);
 
     @Query("select distinct r from Route r join r.stops s where s = (:stop)")
     List<Route> getRoutesWithStop(@Param("stop") Stop stop);

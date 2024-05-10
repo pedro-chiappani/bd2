@@ -9,8 +9,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import unlp.info.bd2.model.Purchase;
+import unlp.info.bd2.model.Route;
 
 public interface PurchaseRepository extends CrudRepository<Purchase, Long>{
+
+    int countByRoute(Route route);
+    Purchase findByCode(String code);
+
 
     @Query("select p from Purchase p where user=(:username)")
     abstract List<Purchase> getAllPurchasesOfUsername(@Param("username") String username);
@@ -20,4 +25,5 @@ public interface PurchaseRepository extends CrudRepository<Purchase, Long>{
 
     @Query("select count (p) From Purchase p where p.date between (:start) and (:end)")
     long getCountOfPurchasesBetweenDates(@Param("start") Date start, @Param("end") Date end);
+
 }
