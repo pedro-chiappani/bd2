@@ -12,8 +12,8 @@ import unlp.info.bd2.model.Purchase;
 
 public interface PurchaseRepository extends CrudRepository<Purchase, Long>{
 
-    @Query("select p from Purchase where user=(:user)")
-    List<Purchase> getAllPurchasesOfUsername(@Param("user") String user);
+    @Query("select p from Purchase p where user=(:username)")
+    abstract List<Purchase> getAllPurchasesOfUsername(@Param("username") String username);
 
     @Query("select distinct p from Purchase p where size(p.itemServiceList) > 0 order by p.totalPrice desc")
     List<Purchase> getTop10MoreExpensivePurchasesInService(Pageable pageable);
