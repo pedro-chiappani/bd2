@@ -121,14 +121,8 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Override
     @Transactional
     public void deleteUser(User user) throws ToursException {
-        if(tourGuideUserRepository.existsById(user.getId())){
-            Optional<TourGuideUser> optionalTourGuideUser = tourGuideUserRepository.findById(user.getId());
-            if(optionalTourGuideUser.isPresent()){
-                TourGuideUser tourGuideUser = optionalTourGuideUser.get();
-                if(!tourGuideUser.getRoutes().isEmpty()){
-                    throw new ToursException("El usuario no puede ser desactivado");
-                }
-            }
+        if(user.hasRoutes()){
+            throw new ToursException("El usuario no puede ser desactivado");
         }
         if(user.getPurchaseList().isEmpty()){
             userRepository.delete(user);

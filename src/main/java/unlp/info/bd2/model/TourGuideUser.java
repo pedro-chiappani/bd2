@@ -44,5 +44,9 @@ public class TourGuideUser extends User {
         this.routes.add(route);
     }
 
+    public boolean hasRoutes(){
+        return !this.routes.isEmpty();
+    }
+
 
 }

@@ -39,4 +39,8 @@ public class DriverUser extends User {
     public void addRoute(Route route) {
         this.routes.add(route);
     }
+
+    public boolean hasRoutes(){
+        return !this.routes.isEmpty();
+    }
 }
