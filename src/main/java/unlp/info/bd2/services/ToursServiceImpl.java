@@ -65,10 +65,8 @@ public class ToursServiceImpl implements ToursService {
     @Override
     @Transactional
     public void deleteUser(User user) throws ToursException {
-       if(user.getClass() == TourGuideUser.class) {
-            TourGuideUser tourGuideUser = (TourGuideUser) user;
-            if (!tourGuideUser.getRoutes().isEmpty())
-                throw new ToursException("El usuario no puede ser desactivado");
+       if(user.hasRoutes()) {
+           throw new ToursException("El usuario no puede ser desactivado");
        }
        if (user.getPurchaseList().isEmpty()) {
            this.toursRepository.remove(user);

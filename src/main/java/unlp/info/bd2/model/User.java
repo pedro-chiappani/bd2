@@ -127,4 +127,6 @@ public class User {
     public void deactivate(){
         this.active = false;
     }
+
+    public boolean hasRoutes() {return false; }
 }
