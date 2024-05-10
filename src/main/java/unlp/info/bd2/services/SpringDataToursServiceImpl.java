@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.PageRequest;
 
 
@@ -51,7 +52,7 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Autowired
     UserRepository userRepository;
 
-    
+
     @Override
     @Transactional
     public User createUser(String username, String password, String fullName, String email, Date birthdate,
@@ -372,7 +373,8 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Override
     @Transactional
     public List<Purchase> getAllPurchasesOfUsername(String username) {
-        return this.purchaseRepository.getAllPurchasesOfUsername(username);
+        User user = this.userRepository.findByUsername(username);
+        return this.purchaseRepository.getAllPurchasesOfUsername(user);
     }
 
     @Override
@@ -436,7 +438,7 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Override
     @Transactional
     public Service getMostDemandedService() {
-        return this.serviceRepository.getMostDemandedService();
+        return this.serviceRepository.getMostDemandedService(Limit.of(1));
     }
 
     @Override

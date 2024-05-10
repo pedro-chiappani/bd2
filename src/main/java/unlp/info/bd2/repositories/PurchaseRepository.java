@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import unlp.info.bd2.model.Purchase;
 import unlp.info.bd2.model.Route;
+import unlp.info.bd2.model.User;
 
 public interface PurchaseRepository extends CrudRepository<Purchase, Long>{
 
@@ -17,8 +18,8 @@ public interface PurchaseRepository extends CrudRepository<Purchase, Long>{
     Purchase findByCode(String code);
 
 
-    @Query("select p from Purchase p where user=(:username)")
-    abstract List<Purchase> getAllPurchasesOfUsername(@Param("username") String username);
+    @Query("select p from Purchase p where user=(:user)")
+    abstract List<Purchase> getAllPurchasesOfUsername(@Param("user") User user);
 
     @Query("select distinct p from Purchase p where size(p.itemServiceList) > 0 order by p.totalPrice desc")
     List<Purchase> getTop10MoreExpensivePurchasesInService(Pageable pageable);
