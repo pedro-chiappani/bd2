@@ -368,7 +368,7 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Transactional
     public List<Purchase> getAllPurchasesOfUsername(String username) {
         User user = this.userRepository.findByUsername(username);
-        return this.purchaseRepository.getAllPurchasesOfUsername(user);
+        return this.purchaseRepository.findByUser(user);
     }
 
     @Override
@@ -388,7 +388,7 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Transactional
     public List<Purchase> getTop10MoreExpensivePurchasesInServices() {
         Pageable top10 = PageRequest.of(0,10);
-        return this.purchaseRepository.getTop10MoreExpensivePurchasesInService(top10);
+        return this.purchaseRepository.findDistinctByItemServiceListNotNullOrderByTotalPriceDesc( top10);
     }
 
     @Override
@@ -401,7 +401,7 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Override
     @Transactional
     public long getCountOfPurchasesBetweenDates(Date start, Date end) {
-        return this.purchaseRepository.getCountOfPurchasesBetweenDates(start, end);
+        return this.purchaseRepository.countByDateBetween(start, end);
     }
 
     @Override

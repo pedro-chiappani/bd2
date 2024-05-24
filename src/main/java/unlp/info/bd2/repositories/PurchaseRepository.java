@@ -18,13 +18,13 @@ public interface PurchaseRepository extends CrudRepository<Purchase, Long>{
     Purchase findByCode(String code);
 
 
-    @Query("select p from Purchase p where user=(:user)")
-    abstract List<Purchase> getAllPurchasesOfUsername(@Param("user") User user);
+    List<Purchase> findByUser(User user);
 
-    @Query("select distinct p from Purchase p where size(p.itemServiceList) > 0 order by p.totalPrice desc")
-    List<Purchase> getTop10MoreExpensivePurchasesInService(Pageable pageable);
 
-    @Query("select count (p) From Purchase p where p.date between (:start) and (:end)")
-    long getCountOfPurchasesBetweenDates(@Param("start") Date start, @Param("end") Date end);
+    // @Query("select distinct p from Purchase p where size(p.itemServiceList) > 0 order by p.totalPrice desc")
+    List<Purchase> findDistinctByItemServiceListNotNullOrderByTotalPriceDesc(Pageable pageable);
+
+    // @Query("select count (p) From Purchase p where p.date between (:start) and (:end)")
+    long countByDateBetween(Date start, Date end);
 
 }
