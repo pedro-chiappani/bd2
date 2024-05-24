@@ -374,7 +374,7 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Override
     @Transactional
     public List<User> getUserSpendingMoreThan(float mount) {
-        return this.userRepository.getUserSpendingMoreThan(mount);
+        return this.userRepository.findDistinctByPurchaseListNotNullOrderByTotalPriceGreaterThan(mount);
     }
 
     @Override
@@ -432,13 +432,14 @@ public class SpringDataToursServiceImpl implements ToursService{
     @Override
     @Transactional
     public Service getMostDemandedService() {
-        return this.serviceRepository.getMostDemandedService(Limit.of(1));
+        Pageable solo1 = PageRequest.of(0,1);
+        return this.serviceRepository.getMostDemandedService(solo1).get(0);
     }
 
     @Override
     @Transactional
     public List<Service> getServiceNoAddedToPurchases() {
-        return this.serviceRepository.getServiceNoAddedToPurchases();
+        return this.serviceRepository.findByItemServiceListNull();
     }
 
     @Override
