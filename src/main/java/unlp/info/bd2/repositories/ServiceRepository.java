@@ -6,10 +6,12 @@ import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import unlp.info.bd2.model.Service;
 import unlp.info.bd2.model.Supplier;
 
+@Repository
 public interface ServiceRepository extends CrudRepository<Service, Long>{
 
     Service findByNameAndSupplier(String name, Supplier supplier);
